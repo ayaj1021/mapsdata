@@ -10,6 +10,7 @@ class AppColors {
   static const Color primaryF6E6FD = Color(0xFFF6E6FD);
   static const Color primaryEEEEF0 = Color(0xFFEEEEF0);
   static const Color primary120C2B = Color(0xFF120C2B);
+  static const Color primaryDEEDF7 = Color(0xFFDEEDF7);
   static const Color primary170D45 = Color(0xFF170D45);
   static const Color primaryFEFAF2 = Color(0xFFFEFAF2);
   static const Color primaryDFEDE0 = Color(0xFFDFEDE0);
@@ -26,8 +27,8 @@ class AppColors {
   static const Color primary6BC1EC = Color(0xFF6BC1EC);
   static const Color primaryOF74A8 = Color(0xFF0F74A8);
   static const Color primary0064FF = Color(0xFF0064FF);
-  static const Color primaryE6FDE8 = Color(0xFFE6FDE8);
-  static const Color primary29C302 = Color(0xFF29C302);
+  static const Color primary1A1A1A = Color(0xFF1A1A1A);
+  static const Color primary475569 = Color(0xFF475569);
 
   static const Color greyF9F9F9 = Color(0xFFF9F9F9);
   static const Color greyF1F1F1 = Color(0xFFF1F1F1);

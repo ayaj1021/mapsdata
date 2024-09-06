@@ -36,6 +36,7 @@ class _LoginState extends ConsumerState<Login> {
 
   @override
   void initState() {
+  
     _usernameController = TextEditingController(
         // text: kDebugMode ? 'xclusive+3@yopmail.com' : null,
         )
@@ -104,8 +105,9 @@ class _LoginState extends ConsumerState<Login> {
                 ),
 
                 GestureDetector(
-                  onTap: () =>
-                      context.pushNamed<void>(ForgotPassword.routeName),
+                  onTap: () {
+                    context.pushNamed<void>(ForgotPassword.routeName);
+                  },
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
@@ -129,10 +131,10 @@ class _LoginState extends ConsumerState<Login> {
                         return MapsDataSendButton(
                           isLoading: isLoading,
                           isEnabled: r && !isLoading,
-                          onTap: (){
+                          onTap: () {
                             context.replaceNamed(Dashboard.routeName);
                           },
-                          
+
                           //_login,
                           title: Strings.login,
                         );

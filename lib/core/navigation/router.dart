@@ -1,9 +1,11 @@
 
 
 import 'package:flutter/widgets.dart';
+import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
 import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/forgot_password.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/login.dart';
+import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
 import 'package:mapsdata/presentation/features/onboarding/presentation/view/onboarding_view.dart';
 import 'package:mapsdata/presentation/features/sign_up/presentation/view/register.dart';
 import 'package:mapsdata/presentation/general_widgets/splash_screen.dart';
@@ -17,6 +19,8 @@ class AppRouter {
     ForgotPassword.routeName: (context) => const ForgotPassword(),
     // OTPVerification.routeName: (context) => const OTPVerification(),
     Dashboard.routeName: (context) => const Dashboard(),
+    AirtimeTopupScreen.routeName: (context) => const AirtimeTopupScreen(),
+    MapsVenture.routeName: (context) => const MapsVenture(),
 
 
   };

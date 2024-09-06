@@ -39,7 +39,7 @@ class WalletBalanceSection extends StatelessWidget {
                   ),
                 ],
               ),
-              const VerticalSpacing(25),
+              const VerticalSpacing(30),
               Text(
                 '₦35,000,000.00',
                 style:
@@ -49,18 +49,30 @@ class WalletBalanceSection extends StatelessWidget {
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 'Transaction history',
-                style: context.textTheme.s12w400.copyWith(color: AppColors.white),
-              ),
-               const VerticalSpacing(25),
-              Text(
-                '',
                 style:
-                    context.textTheme.s14w600.copyWith(color: AppColors.white),
+                    context.textTheme.s12w400.copyWith(color: AppColors.white),
               ),
+              const VerticalSpacing(30),
+              Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.white,
+                  ),
+                  child: Text(
+                    'Fund Account',
+                    style: context.textTheme.s12w600
+                        .copyWith(color: AppColors.primaryColor),
+                  )
+
+                  //  MapsDataSendButton(onTap: (){}, title: 'Fund Account'),
+
+                  )
             ],
           ),
         ],

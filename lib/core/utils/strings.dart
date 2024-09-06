@@ -144,6 +144,7 @@ Click on the button above to get your virtual account to start transacting on th
   static const String seeAll = 'See All';
   static const String buyRmb = 'Buy RMB';
   static const String airtime = 'Airtime';
+  static const String airtimeTopUp = 'Airtime Topup';
   static const String data = 'Data';
   static const String electricity = 'Electricity';
   static const String more = 'More';
@@ -168,15 +169,19 @@ Click on the button above to get your virtual account to start transacting on th
   static const String newPassword = 'Create New Password';
   static const String allProductsForService =
       'All products for services you need';
-  static const String notUploadedAlipayQrCode =
-      'You haven’t uploaded your Alipay QRcode, kindly proceed to upload it, to complete your transaction';
+
   static const String newPasswordSub =
       'New password must not be the same as the previous one';
   static const String confirmPassword = 'confirm password';
   static const String passwordReset = 'Password Reset Successful';
+  static const String notification = 'Notification';
+  static const String bvnUpdateMessage =
+      'Click fund wallet, then click monnify, UPDATE YOUR BVN, then generate your automated bank account, transfer to any account , your wallet will be credited automatically.';
   static const String passwordResetSub =
       'Your password has been successfully reset, kindly go back to login in to your account.';
   static const String files = 'Files';
+  static const String inorderToMakeYourAccount =
+      'Inorder to make your account more secure, you\'re required to set a 4 digit pin. Any purchase made on our platform will be authorized using this PIN.';
   static const String quickAction = 'Quick Action';
   static const String oneRmb = '1 RMB= 1915.0 NGN';
 
