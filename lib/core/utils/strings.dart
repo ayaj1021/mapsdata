@@ -77,7 +77,7 @@ class Strings {
   static const String paySupplier = 'Pay Supplier';
   static const String billPayment = 'Bill Payment';
 
-  static const String selectImage = 'Select Image From';
+  static const String selectDataPackage = 'Select data package';
   static const String totalBalance = 'Total balance';
   static const String ourAvailableService =
       'Our Available service all made for you';
@@ -146,6 +146,7 @@ Click on the button above to get your virtual account to start transacting on th
   static const String airtime = 'Airtime';
   static const String airtimeTopUp = 'Airtime Topup';
   static const String data = 'Data';
+  static const String dataTopUp = 'Data Topup';
   static const String electricity = 'Electricity';
   static const String more = 'More';
   static const String completeKycLevel = 'Complete KYC Level 1';

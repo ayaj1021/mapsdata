@@ -10,10 +10,9 @@ import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/core/utils/enums.dart';
 import 'package:mapsdata/core/utils/strings.dart';
 import 'package:mapsdata/core/utils/validators.dart';
-import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/login.dart';
-import 'package:mapsdata/presentation/features/sign_up/data/models/sign_up_request.dart';
-import 'package:mapsdata/presentation/features/sign_up/presentation/notifier/register_notifier.dart';
+import 'package:mapsdata/presentation/features/register/data/models/sign_up_request.dart';
+import 'package:mapsdata/presentation/features/register/presentation/notifier/register_notifier.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_email_field.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_form_field.dart';
@@ -70,16 +69,15 @@ class _RegisterState extends ConsumerState<Register> {
 
   void _validateInput() {
     ref.read(registerNotifier.notifier).allInputValid(
+          firstNameValid: Validators.name()(_firstNamecontroller.text) == null,
+          lastNameValid: Validators.name()(_lastNamecontroller.text) == null,
+          userNameValid: Validators.name()(_usernamecontroller.text) == null,
           emailValid: Validators.email()(_emailAddressController.text) == null,
+          numberValid: Validators.phone()(_phoneNumbercontroller.text) == null,
           passwordValid: Validators.password()(_passwordController.text) ==
                   null &&
               Validators.password()(_confirmPasswordController.text) == null &&
               _passwordController.text == _confirmPasswordController.text,
-          nameValid: Validators.name()(_firstNamecontroller.text) == null &&
-              Validators.name()(_lastNamecontroller.text) == null,
-          usernameValid:
-              Validators.notEmpty()(_usernamecontroller.text) == null,
-          dateValid: Validators.date()(_phoneNumbercontroller.text) == null,
         );
   }
 
@@ -87,21 +85,22 @@ class _RegisterState extends ConsumerState<Register> {
     // print('xclusive@gmail.com'.redactedEmail);
     ref.read(registerNotifier.notifier).signUp(
           data: SignUpRequest(
-            email: _emailAddressController.text.toLowerCase().trim(),
-            password: _passwordController.text,
-            firstName: _firstNamecontroller.text,
-            lastName: _lastNamecontroller.text.toLowerCase(),
-            username: _usernamecontroller.text,
-            dateOfBirth:
-                _phoneNumbercontroller.text.split('/').reversed.join('-'),
-            alipayQrCode: 'aaaaa',
-            gender: '',
+            firstname: _firstNamecontroller.text.trim(),
+            lastname: _lastNamecontroller.text.trim(),
+            email: _emailAddressController.text.trim(),
+            username: _usernamecontroller.text.trim(),
+            number: _phoneNumbercontroller.text.trim(),
+            password: _passwordController.text.trim(),
+            confirmPassword: _confirmPasswordController.text.trim(),
           ),
           onError: (error) {
             context.showError(message: error);
           },
-          onSuccess: () {
-            context.hideOverLay();
+          onSuccess: (message) {
+          //  context.hideOverLay();
+            context.showSuccess(
+                message: 'Registration has been completed successfully.');
+            context.replaceNamed(Login.routeName);
             // ..push(
 
             // );
@@ -129,12 +128,7 @@ class _RegisterState extends ConsumerState<Register> {
                     style: context.textTheme.s32w600,
                   ),
                   45.hSpace,
-                  DSEmailField(
-                    validateFunction: Validators.email(),
-                    controller: _emailAddressController,
-                    hintText: Strings.emailAddress,
-                    prefixIcon: const Icon(Icons.email),
-                  ),
+
                   DSFormfield(
                     validateFunction: Validators.name(),
                     controller: _firstNamecontroller,
@@ -151,6 +145,12 @@ class _RegisterState extends ConsumerState<Register> {
                     controller: _usernamecontroller,
                     hintText: 'Username',
                     prefixIcon: const Icon(Icons.person),
+                  ),
+                  DSEmailField(
+                    validateFunction: Validators.email(),
+                    controller: _emailAddressController,
+                    hintText: Strings.emailAddress,
+                    prefixIcon: const Icon(Icons.email),
                   ),
                   DSFormfield(
                     validateFunction: Validators.phone(),
@@ -182,12 +182,7 @@ class _RegisterState extends ConsumerState<Register> {
                     showError: false,
                     padding: 8.hSpace,
                   ),
-                  // ValidatorText(
-                  //   isValid: _passwordController.text.isNotEmpty &&
-                  //       _passwordController.text ==
-                  //           _confirmPasswordController.text,
-                  //   text: 'Password match',
-                  // ),
+
                   11.hSpace,
 
                   const SizedBox(
@@ -206,10 +201,9 @@ class _RegisterState extends ConsumerState<Register> {
                             !isLoading,
                         isLoading: isLoading,
                         onTap: () {
-                          context.replaceNamed(Dashboard.routeName);
+                          // context.replaceNamed(Dashboard.routeName);
+                          _signUp();
                         },
-
-                        //_signUp,
                         title: Strings.register,
                       );
                     },

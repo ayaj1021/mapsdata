@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/config/exception/message_exception.dart';
+import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/core/utils/enums.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_request.dart';
 import 'package:mapsdata/presentation/features/login/data/repository/login_repository.dart';
@@ -17,24 +18,20 @@ class LoginNotifer extends AutoDisposeNotifier<LoginNotiferState> {
   Future<void> login({
     required LoginRequest data,
     required void Function(String error) onError,
-    required void Function() onSuccess,
+    required void Function(String message) onSuccess,
   }) async {
     try {
       state = state.copyWith(loginState: LoadState.loading);
       final value = await _loginRepository.login(
         data,
       );
-      if (!value.status) throw value.message.toException;
+      if (value.status == 'failed') throw value.message.toException;
 
-      // await Future.wait([
-      //   _saveUserPassword(data.password),
-      //   _saveUser(value.data!),
-      //   _saveToken(value.data!.tokens!),
-      //   _saveCurrentState(),
-      // ]);
 
       state = state.copyWith(loginState: LoadState.idle);
-      onSuccess();
+      await SecureStorage().saveUserToken(value.data!.user!.token.toString());
+      await SecureStorage().saveUserApiKey(value.data!.user!.apikey.toString());
+      onSuccess(value.message.toString());
     } catch (e) {
       onError(e.toString());
       state = state.copyWith(loginState: LoadState.idle);
@@ -70,8 +67,8 @@ class LoginNotifer extends AutoDisposeNotifier<LoginNotiferState> {
   }) async {
     try {
       state = state.copyWith(logoutState: LoadState.loading);
-     // final res = await _loginRepository.logout();
-    //  if (!res.status) throw res.message.toException;
+      // final res = await _loginRepository.logout();
+      //  if (!res.status) throw res.message.toException;
       state = state.copyWith(logoutState: LoadState.success);
       onSuccess();
     } catch (e) {

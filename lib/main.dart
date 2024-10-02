@@ -2,15 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mapsdata/core/navigation/router.dart';
+import 'package:mapsdata/presentation/general_widgets/app_overlay.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _controller = OverLayController();
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -18,10 +30,22 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, c) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            routes: AppRouter.routes,
-            initialRoute: '/',
+          return GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: AppOverLay(
+                controller: _controller,
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  routes: AppRouter.routes,
+                  initialRoute: '/',
+                ),
+              ),
+            ),
           );
         });
   }

@@ -14,7 +14,7 @@ class ForgotPasswordRepository {
   ) async {
     try {
      // await _client.forgotPassword(forgotPasswordRequest);
-      return const BaseResponse(status: true);
+      return const BaseResponse(status: 'success');
     } on DioException catch (e) {
       return AppException.handleError(e);
     }

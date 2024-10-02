@@ -140,12 +140,12 @@ class Validators {
     return matchPattern(emailPattern, 'email');
   }
 
-  static Validator password([int minimumLength = 8]) => multiple(
+  static Validator password([int minimumLength = 6]) => multiple(
         [
-          containsUpper('Password'),
-          containsLower('Password'),
-          containsNumber('Password'),
-          containsSpecialChar('Password'),
+          // containsUpper('Password'),
+          // containsLower('Password'),
+          // containsNumber('Password'),
+          // containsSpecialChar('Password'),
           minLength(minimumLength),
         ],
         shouldTrim: false,

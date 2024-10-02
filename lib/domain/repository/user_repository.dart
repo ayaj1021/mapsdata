@@ -1,35 +1,30 @@
-import 'dart:convert';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mapsdata/data/local_data_source/local_storage.dart';
-import 'package:mapsdata/data/local_data_source/storage_keys.dart';
-import 'package:mapsdata/presentation/features/sign_up/data/models/sign_up_response.dart';
 
-class UserRepository {
-  UserRepository(this._storage, this.onUpdateuser);
-  final LocalStorage _storage;
-  final void Function(DSUser user) onUpdateuser;
+// class UserRepository {
+//   UserRepository(this._storage, this.onUpdateuser);
+//   final LocalStorage _storage;
+//   final void Function(DSUser user) onUpdateuser;
 
-  DSUser getUser() {
-    final response = _storage.get<String?>(HiveKeys.user);
-    final user = DSUser.fromJson(
-      response == null
-          ? {}
-          : json.decode(response as String) as Map<String, dynamic>,
-    );
-    return user;
-  }
+//   DSUser getUser() {
+//     final response = _storage.get<String?>(HiveKeys.user);
+//     final user = DSUser.fromJson(
+//       response == null
+//           ? {}
+//           : json.decode(response as String) as Map<String, dynamic>,
+//     );
+//     return user;
+//   }
 
-  Future<void> updateUser(DSUser user) async {
-    await saveCurrentUser(user);
-    onUpdateuser(user);
-  }
+//   Future<void> updateUser(DSUser user) async {
+//     await saveCurrentUser(user);
+//     onUpdateuser(user);
+//   }
 
-  Future<void> saveCurrentUser(DSUser val) async {
-    final js = val.toJson();
-    await _storage.put(HiveKeys.user, json.encode(js));
-  }
-}
+//   Future<void> saveCurrentUser(DSUser val) async {
+//     final js = val.toJson();
+//     await _storage.put(HiveKeys.user, json.encode(js));
+//   }
+// }
 
 // final userRepositoryProvider = Provider<UserRepository>(
 //   (ref) => UserRepository(

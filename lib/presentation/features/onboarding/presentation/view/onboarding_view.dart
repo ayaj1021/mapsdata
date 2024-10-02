@@ -3,7 +3,7 @@ import 'package:mapsdata/core/extensions/build_context_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/login.dart';
 import 'package:mapsdata/presentation/features/onboarding/presentation/widgets/onboarding_page.dart';
-import 'package:mapsdata/presentation/features/sign_up/presentation/view/register.dart';
+import 'package:mapsdata/presentation/features/register/presentation/view/register.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 

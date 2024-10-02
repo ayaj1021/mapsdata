@@ -14,14 +14,14 @@ class AppException implements Exception {
     if (e.response != null && DioExceptionType.badResponse == e.type) {
       if ((e.response?.statusCode ?? 0) >= 500) {
         return BaseResponse(
-          status: false,
+          status: 'failed',
           message: Strings.serverError,
           data: data,
         );
       }
       if (e.response?.statusCode == 413) {
         return BaseResponse(
-          status: false,
+          status: 'failed',
           message: 'File size too large',
           data: data,
         );
@@ -41,13 +41,13 @@ class AppException implements Exception {
       } else if (e.response?.data is String) {
         debugLog(e.response?.data);
         return BaseResponse(
-          status: false,
+          status: 'failed',
           message: e.response?.data as String,
         );
       }
     }
     return BaseResponse(
-      status: false,
+      status: 'failed',
       data: data,
       message: _mapException(e.type),
     );

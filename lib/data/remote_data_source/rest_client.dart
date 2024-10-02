@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mapsdata/core/config/base_response/base_response.dart';
 import 'package:mapsdata/core/config/env/base_env.dart';
 import 'package:mapsdata/core/config/env/prod_env.dart';
 import 'package:mapsdata/core/config/interceptors/header_interceptor.dart';
-import 'package:mapsdata/domain/repository/user_auth_repository.dart';
+import 'package:mapsdata/core/database/local_storage_impl.dart';
+import 'package:mapsdata/presentation/features/data_topup/data/model/get_data_response_model.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_request.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_response.dart';
-import 'package:mapsdata/presentation/features/sign_up/data/models/sign_up_request.dart';
-import 'package:mapsdata/presentation/features/sign_up/data/models/sign_up_response.dart';
+import 'package:mapsdata/presentation/features/register/data/models/sign_up_request.dart';
+import 'package:mapsdata/presentation/features/register/data/models/sign_up_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'rest_client.g.dart';
@@ -17,15 +17,21 @@ part 'rest_client.g.dart';
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
-  @POST('/auth/signup')
-  Future<BaseResponse<SignUpResponse>> signUp(
+  @POST('/user/register')
+  Future<SignUpResponse> signUp(
     @Body() SignUpRequest signUpRequest,
   );
 
-  @POST('/auth/login')
-  Future<BaseResponse<LoginResponse>> login(
+  @POST('/user/login')
+  Future<LoginResponse> login(
     @Body() LoginRequest loginRequest,
   );
+
+  @GET('/api/data/plans')
+  Future<GetDataPlansResponse> getDataPlansDetails(
+      // @Queries() Map<String, dynamic> queries,
+      );
+
 //   @POST('/auth/create-pin')
 //   Future<BaseResponse<LoginResponse>> createPin(
 //     @Body() CreatePinRequest loginRequest,
@@ -111,7 +117,7 @@ abstract class RestClient {
 ProviderFamily<Dio, BaseEnv> _dio = Provider.family<Dio, BaseEnv>(
   (ref, env) {
     final dio = Dio();
-    dio.options.baseUrl = 'https://app.mapsdata.com.ng';
+    dio.options.baseUrl = 'https://server.mapsdata.com.ng';
     dio.options.headers = {
       'Content-Type': 'application/json',
       // 'accept': 'application/json',
@@ -120,7 +126,7 @@ ProviderFamily<Dio, BaseEnv> _dio = Provider.family<Dio, BaseEnv>(
     dio.interceptors.add(
       HeaderInterCeptor(
         dio: dio,
-        authRepository: ref.read(userAuthRepositoryProvider),
+        secureStorage: ref.read(localStorageProvider),
         // onTokenExpired: () {
         //ref.read(logoutProvider.notifier).state = ActivityStatus.loggedOut;
         // },

@@ -1,18 +1,17 @@
 import 'dart:async';
 
-
 import 'package:dio/dio.dart';
 import 'package:mapsdata/core/config/exception/logger.dart';
-import 'package:mapsdata/domain/repository/user_auth_repository.dart';
+import 'package:mapsdata/core/database/local_storage_impl.dart';
 
 class HeaderInterCeptor extends Interceptor {
   HeaderInterCeptor({
     required this.dio,
-    required this.authRepository,
-   // required this.onTokenExpired,
+    required this.secureStorage,
+    // required this.onTokenExpired,
   });
   final Dio dio;
-  final UserAuthRepository authRepository;
+  final SecureStorage secureStorage;
 //  final void Function() onTokenExpired;
 
   final _authRoutes = [
@@ -29,12 +28,17 @@ class HeaderInterCeptor extends Interceptor {
   FutureOr<dynamic> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
-  ) {
+  ) async {
     try {
-     // final token = authRepository.getToken();
-      // if (token.accessToken?.isNotEmpty ?? false) {
-      //   options.headers['Cookie'] = 'accessToken=${token.accessToken}';
-      // }
+      final apikey = await secureStorage.getUserApiKey();
+      // log("This is user accesstoken $apikey");
+
+      debugLog('[TOKEN]$apikey');
+      if (apikey.toString().isNotEmpty) {
+        options.headers['Authorization'] = 'Bearer $apikey';
+        // options.headers['authorization'] = '$token';
+        // options.headers['Cookie'] = 'accessToken=${token.token}';
+      }
     } catch (e) {
       debugLog(e);
     }
@@ -62,7 +66,7 @@ class HeaderInterCeptor extends Interceptor {
     if (err.response?.statusCode == 401 ||
         err.response?.statusCode == 403 &&
             !_authRoutes.contains(err.requestOptions.path)) {
-     // onTokenExpired();
+      // onTokenExpired();
     }
     handler.next(err);
     return err;

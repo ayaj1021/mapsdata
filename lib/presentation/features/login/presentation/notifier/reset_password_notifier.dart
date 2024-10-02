@@ -26,7 +26,7 @@ class ResetPasswordNotifier extends AutoDisposeNotifier<ResetPasswordState> {
       final value = await _resetPasswordRepository.resetPassword(
         data,
       );
-      if (!value.status) throw value.message.toException;
+      if (value.status  == 'failed') throw value.message.toException;
 
       state = state.copyWith(
         resetPasswordState: LoadState.idle,

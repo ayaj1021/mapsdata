@@ -1,6 +1,12 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mapsdata/core/database/local_storage_impl.dart';
+import 'package:mapsdata/core/extensions/build_context_extension.dart';
+import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
 import 'package:mapsdata/presentation/features/onboarding/presentation/view/onboarding_view.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -13,31 +19,27 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
+  SecureStorage secureStorage = SecureStorage();
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () async{
-      //   final storage = await SecureStorage();
-      // final token = await storage.getUserToken();
-     //debugPrint('token is $token');
-      // if (token != null) {
-      //   Navigator.pushReplacementNamed(context, Login.routeName);
-      // } else {
-        Navigator.pushReplacementNamed(context, OnboardingScreen.routeName);
-     // }
-      // final userState = ref.read(userAuthRepositoryProvider);
-      // switch (userState.getCurrentState()) {
-      //   case CurrentState.initial:
-      //     Navigator.pushReplacementNamed(context, Onboarding.routeName);
-      //   default:
-      //     Navigator.pushReplacementNamed(context, Login.routeName);
-      // }
+    Timer(const Duration(seconds: 4), () async {
+      final token = await secureStorage.getUserToken();
+
+      log('token is ${token.toString()}');
+      if (token != null) {
+        context.pushReplacementNamed(Dashboard.routeName);
+      } else {
+        context.pushReplacementNamed(OnboardingScreen.routeName);
+      }
+      // Navigator.pushReplacementNamed(context, OnboardingScreen.routeName);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

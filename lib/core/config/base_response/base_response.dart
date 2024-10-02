@@ -24,13 +24,13 @@ class BaseResponse<T> {
   factory BaseResponse.fromMap(Map<String, dynamic> json) {
     return BaseResponse(
       data: json['data'] as T?,
-      status: json['success'] as bool? ?? false,
+      status: json['success'],
       message: json['message'] as String? ?? Strings.genericErrorMessage,
     );
   }
   final T? data;
   @JsonKey(name: 'success')
-  final bool status;
+  final String status;
   final String? message;
 
   Map<String, dynamic> toJson(Object Function(T value) toJsonT) =>

@@ -22,21 +22,20 @@ class _RestClient implements RestClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<BaseResponse<SignUpResponse>> signUp(
-      SignUpRequest signUpRequest) async {
+  Future<SignUpResponse> signUp(SignUpRequest signUpRequest) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(signUpRequest.toJson());
-    final _options = _setStreamType<BaseResponse<SignUpResponse>>(Options(
+    final _options = _setStreamType<SignUpResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/auth/signup',
+          '/user/register',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -46,12 +45,9 @@ class _RestClient implements RestClient {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponse<SignUpResponse> _value;
+    late SignUpResponse _value;
     try {
-      _value = BaseResponse<SignUpResponse>.fromJson(
-        _result.data!,
-        (json) => SignUpResponse.fromJson(json as Map<String, dynamic>),
-      );
+      _value = SignUpResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -60,20 +56,20 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<BaseResponse<LoginResponse>> login(LoginRequest loginRequest) async {
+  Future<LoginResponse> login(LoginRequest loginRequest) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(loginRequest.toJson());
-    final _options = _setStreamType<BaseResponse<LoginResponse>>(Options(
+    final _options = _setStreamType<LoginResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/auth/login',
+          '/user/login',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -83,12 +79,42 @@ class _RestClient implements RestClient {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponse<LoginResponse> _value;
+    late LoginResponse _value;
     try {
-      _value = BaseResponse<LoginResponse>.fromJson(
-        _result.data!,
-        (json) => LoginResponse.fromJson(json as Map<String, dynamic>),
-      );
+      _value = LoginResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<GetDataPlansResponse> getDataPlansDetails() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<GetDataPlansResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/data/plans',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late GetDataPlansResponse _value;
+    try {
+      _value = GetDataPlansResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

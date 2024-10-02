@@ -13,7 +13,8 @@ class LoginRepository {
   Future<BaseResponse<LoginResponse>> login(LoginRequest loginRequest) async {
     try {
       final response = await _restClient.login(loginRequest);
-      return response;
+    //  return BaseResponse(status: 'success', data: response);
+      return BaseResponse(status: response.status.toString(), data: response);
     } on DioException catch (e) {
       return AppException.handleError(e);
     }

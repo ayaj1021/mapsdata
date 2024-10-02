@@ -3,6 +3,7 @@ import 'package:mapsdata/core/extensions/build_context_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/widgets/quick_action_tabs.dart';
+import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -28,8 +29,11 @@ class ServicesSection extends StatelessWidget {
                   onTap: () => context.pushNamed(AirtimeTopupScreen.routeName),
                   image: 'assets/svg/data_new.svg',
                   title: 'Airtime Topup'),
-              const QuickActionTabs(
-                  image: 'assets/svg/data_new.svg', title: 'Data Topup'),
+              QuickActionTabs(
+                onTap: () => context.pushNamed(BuyDataScreen.routeName),
+                image: 'assets/svg/data_new.svg',
+                title: 'Data Topup',
+              ),
               QuickActionTabs(
                   onTap: () => context.pushNamed(MapsVenture.routeName),
                   image: 'assets/svg/data_new.svg',

@@ -13,7 +13,7 @@ Future<dynamic> bvnNotificationAlert(BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.zero,
           content: Container(
-            height: 300.h,
+            height: 270.h,
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: BoxDecoration(

@@ -16,7 +16,7 @@ import 'package:mapsdata/presentation/features/login/data/models/login_request.d
 import 'package:mapsdata/presentation/features/login/presentation/fingerprint_facialauth.dart';
 import 'package:mapsdata/presentation/features/login/presentation/notifier/login_notifier.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/forgot_password.dart';
-import 'package:mapsdata/presentation/features/sign_up/presentation/view/register.dart';
+import 'package:mapsdata/presentation/features/register/presentation/view/register.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_form_field.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_password_field.dart';
@@ -36,7 +36,6 @@ class _LoginState extends ConsumerState<Login> {
 
   @override
   void initState() {
-  
     _usernameController = TextEditingController(
         // text: kDebugMode ? 'xclusive+3@yopmail.com' : null,
         )
@@ -85,7 +84,7 @@ class _LoginState extends ConsumerState<Login> {
                 DSFormfield(
                     controller: _usernameController,
                     validateFunction: Validators.notEmpty(),
-                    hintText: 'email',
+                    hintText: 'Username',
                     prefixIcon: const Icon(Icons.person)
 
                     // SvgPicture.asset(
@@ -117,7 +116,7 @@ class _LoginState extends ConsumerState<Login> {
                       ),
                     ),
                   ),
-                ), //color: AppColors.primary433C65,
+                ),
 
                 70.hSpace,
                 ValueListenableBuilder(
@@ -132,10 +131,9 @@ class _LoginState extends ConsumerState<Login> {
                           isLoading: isLoading,
                           isEnabled: r && !isLoading,
                           onTap: () {
-                            context.replaceNamed(Dashboard.routeName);
+                            // context.replaceNamed(Dashboard.routeName);
+                            _login();
                           },
-
-                          //_login,
                           title: Strings.login,
                         );
                       },
@@ -220,17 +218,19 @@ class _LoginState extends ConsumerState<Login> {
 
   void _login() {
     final data = LoginRequest(
+      username: _usernameController.text.toLowerCase().trim(),
       password: _passwordController.text.trim(),
-      email: _usernameController.text.toLowerCase().trim(),
     );
     ref.read(loginNotifer.notifier).login(
           data: data,
           onError: (error) {
             context.showError(message: error);
           },
-          onSuccess: () {
+          onSuccess: (message) {
+            context.showSuccess(message: ' Authentication successful');
             _isLoginEnabled.value = false;
-            //context.replaceAll(Dashboard.routeName);
+
+            context.replaceAll(Dashboard.routeName);
           },
         );
   }
