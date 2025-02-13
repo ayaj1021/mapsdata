@@ -36,14 +36,8 @@ class _LoginState extends ConsumerState<Login> {
 
   @override
   void initState() {
-    _usernameController = TextEditingController(
-        // text: kDebugMode ? 'xclusive+3@yopmail.com' : null,
-        )
-      ..addListener(_listener);
-    _passwordController = TextEditingController(
-        // text: kDebugMode ? 'Test@123' : null,
-        )
-      ..addListener(_listener);
+    _usernameController = TextEditingController()..addListener(_listener);
+    _passwordController = TextEditingController()..addListener(_listener);
     super.initState();
   }
 
@@ -131,7 +125,6 @@ class _LoginState extends ConsumerState<Login> {
                           isLoading: isLoading,
                           isEnabled: r && !isLoading,
                           onTap: () {
-                            // context.replaceNamed(Dashboard.routeName);
                             _login();
                           },
                           title: Strings.login,

@@ -21,19 +21,14 @@ class SelectPhoneNumberSection extends StatelessWidget {
             color: AppColors.white,
           ),
           child: DSFormfield(
-              label: 'Phone Number',
-              controller: phoneNumberController,
-              validateFunction: Validators.notEmpty(),
-              hintText: 'Enter phone number',
-              keyboardType: TextInputType.number,
-              maxLength: 11,
-              prefixIcon: const Icon(Icons.phone)
-
-              // SvgPicture.asset(
-              //   'assets/icons/person.svg',
-              //   fit: BoxFit.scaleDown,
-              // ),
-              ),
+            label: 'Phone Number',
+            controller: phoneNumberController,
+            validateFunction: Validators.notEmpty(),
+            hintText: 'Enter phone number',
+            keyboardType: TextInputType.number,
+            maxLength: 11,
+            prefixIcon: const Icon(Icons.phone),
+          ),
         ),
         Positioned(
           top: 19,

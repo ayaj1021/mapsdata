@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/core/utils/strings.dart';
+import 'package:mapsdata/presentation/features/dashboard/history/presentation/view/history.dart';
+import 'package:mapsdata/presentation/features/dashboard/history/presentation/widgets/transaction_history_widget.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
 class TransactionHistorySection extends StatelessWidget {
@@ -19,10 +21,20 @@ class TransactionHistorySection extends StatelessWidget {
               style: context.textTheme.s16w500
                   .copyWith(color: AppColors.primaryColor),
             ),
-            Text(
-              Strings.seeAll,
-              style: context.textTheme.s12w500
-                  .copyWith(color: AppColors.secondaryColor),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const History(),
+                  ),
+                );
+              },
+              child: Text(
+                Strings.seeAll,
+                style: context.textTheme.s12w500
+                    .copyWith(color: AppColors.secondaryColor),
+              ),
             ),
           ],
         ),
@@ -38,67 +50,17 @@ class TransactionHistorySection extends StatelessWidget {
           ),
           child: Column(
             children: List.generate(3, (index) {
-              return SingleChildScrollView(
+              return const SingleChildScrollView(
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const CircleAvatar(
-                              radius: 25,
-                              backgroundColor: AppColors.primaryDEEDF7,
-                              child: Icon(Icons.call_outlined),
-                            ),
-                            const HorizontalSpacing(10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Airtime',
-                                  style: context.textTheme.s14w500.copyWith(
-                                    color: AppColors.primary1A1A1A,
-                                  ),
-                                ),
-                                Text(
-                                  'Apr 18th, 20:59',
-                                  style: context.textTheme.s12w400.copyWith(
-                                    color: AppColors.primary475569,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '-₦35,000.00',
-                              style: context.textTheme.s14w500.copyWith(
-                                color: AppColors.primary1A1A1A,
-                              ),
-                            ),
-                            Text(
-                              'Successful',
-                              style: context.textTheme.s12w400.copyWith(
-                                color: AppColors.green,
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                    const VerticalSpacing(10)
+                    TransactionHistoryWidget(),
+                    VerticalSpacing(10),
                   ],
                 ),
               );
             }),
           ),
         )
-     
-     
       ],
     );
   }

@@ -10,7 +10,6 @@ import 'package:mapsdata/presentation/features/airtime_topup/presentation/widget
 import 'package:mapsdata/presentation/features/data_topup/data/model/get_data_response_model.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/notifier/get_all_data_plans_notifier.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/widgets/data_topup_header_section.dart';
-import 'package:mapsdata/presentation/features/data_topup/presentation/widgets/select_data_package.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
 class BuyDataScreen extends ConsumerStatefulWidget {
@@ -48,33 +47,33 @@ class _BuyDataScreenState extends ConsumerState<BuyDataScreen> {
   // }
 
   @override
-void initState() {
-  super.initState();
-  
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    fetchPlans();
-    setPinNotificationAlert(context);
+  void initState() {
+    super.initState();
 
-    // Fetch data plans from the provider asynchronously
-    await ref
-        .read(getAllDataPlansNotifierProvider.notifier)
-        .getAllDataPlans();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      fetchPlans();
+      setPinNotificationAlert(context);
 
-    // Using the provider to get the current state
-    final allDataPlansState = ref.read(getAllDataPlansNotifierProvider);
+      // Fetch data plans from the provider asynchronously
+      await ref
+          .read(getAllDataPlansNotifierProvider.notifier)
+          .getAllDataPlans();
 
-    // Debugging: Print the fetched plans
-    print("Fetched plans state: ${allDataPlansState.getAllDataPlans.data?.plans}");
+      // Using the provider to get the current state
+      final allDataPlansState = ref.read(getAllDataPlansNotifierProvider);
 
-    // Update the state with fetched plans or an empty list if null
-    setState(() {
-      plans = allDataPlansState.getAllDataPlans.data?.plans ?? [];
+      // Debugging: Print the fetched plans
+      print(
+          "Fetched plans state: ${allDataPlansState.getAllDataPlans.data?.plans}");
+
+      // Update the state with fetched plans or an empty list if null
+      setState(() {
+        plans = allDataPlansState.getAllDataPlans.data?.plans ?? [];
+      });
+
+      print("Updated plans list: $plans");
     });
-
-    print("Updated plans list: $plans");
-  });
-}
-
+  }
 
   fetchPlans() async {
     final dataResponse = ref.watch(
@@ -90,22 +89,10 @@ void initState() {
     });
   }
 
-  // Future<void> fetchPlans() async {
-
-  //   setState(() {
-  //     plans = ref
-  //         .watch(getAllDataPlansNotifierProvider)
-  //         .getAllDataPlans
-  //         .data!
-  //         .data!
-  //         .plans!
-  //         .toSet()
-  //         .toList();
-  //   });
-  // }
 
   final _phoneNumberController = TextEditingController();
   String? selectedPlanType;
+  int? selectedLogoIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +105,9 @@ void initState() {
             children: [
               const DataTopupHeaderSection(),
               const VerticalSpacing(30),
-              const NetworkSelectionSection(),
+              NetworkSelectionSection(
+                selectedLogoIndex: selectedLogoIndex,
+              ),
               const VerticalSpacing(30),
               SelectPhoneNumberSection(
                 phoneNumberController: _phoneNumberController,

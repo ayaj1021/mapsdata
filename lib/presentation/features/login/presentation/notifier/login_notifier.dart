@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/config/exception/message_exception.dart';
 import 'package:mapsdata/core/database/local_storage_impl.dart';
@@ -26,7 +28,7 @@ class LoginNotifer extends AutoDisposeNotifier<LoginNotiferState> {
         data,
       );
       if (value.status == 'failed') throw value.message.toException;
-
+      log(value.message.toString());
 
       state = state.copyWith(loginState: LoadState.idle);
       await SecureStorage().saveUserToken(value.data!.user!.token.toString());

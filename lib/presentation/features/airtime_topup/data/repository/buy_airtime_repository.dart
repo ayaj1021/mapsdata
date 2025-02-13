@@ -3,16 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/config/base_response/base_response.dart';
 import 'package:mapsdata/core/config/exception/app_exception.dart';
 import 'package:mapsdata/data/remote_data_source/rest_client.dart';
-import 'package:mapsdata/presentation/features/login/data/models/login_request.dart';
-import 'package:mapsdata/presentation/features/login/data/models/login_response.dart';
+import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_request.dart';
+import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_response.dart';
 
-class LoginRepository {
-  LoginRepository(this._restClient);
+class BuyAirtimeRepository {
+  BuyAirtimeRepository(this._restClient);
   final RestClient _restClient;
 
-  Future<BaseResponse<LoginResponse>> login(LoginRequest loginRequest) async {
+  Future<BaseResponse<AirtimeResponse>> buyAirtime(
+      BuyAirtimeRequest airtimeRequest) async {
     try {
-      final response = await _restClient.login(loginRequest);
+      final response = await _restClient.buyAirtime(airtimeRequest);
       //  return BaseResponse(status: 'success', data: response);
 
       return BaseResponse(
@@ -23,18 +24,10 @@ class LoginRepository {
       return AppException.handleError(e);
     }
   }
-
-  // Future<BaseResponse> logout() async {
-  //   try {
-  //   //  return await _restClient.logout();
-  //   } on DioException catch (e) {
-  //     return AppException.handleError(e);
-  //   }
-  // }
 }
 
-final loginRepositoryProvider = Provider<LoginRepository>(
-  (ref) => LoginRepository(
+final buyAirtimeRepositoryProvider = Provider<BuyAirtimeRepository>(
+  (ref) => BuyAirtimeRepository(
     ref.read(restClientProvider),
   ),
 );

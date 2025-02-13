@@ -141,6 +141,7 @@ Click on the button above to get your virtual account to start transacting on th
   static const String virtualAccountDetails = 'Virtual Account Details';
   static const String moreDetails = 'More Details';
   static const String recentTransactions = 'Recent Transactions';
+  static const String transactionHistory = 'Transaction History';
   static const String seeAll = 'See All';
   static const String buyRmb = 'Buy RMB';
   static const String airtime = 'Airtime';

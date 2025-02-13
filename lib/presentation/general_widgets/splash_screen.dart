@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +25,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     Timer(const Duration(seconds: 4), () async {
       final token = await secureStorage.getUserToken();
 
-      log('token is ${token.toString()}');
       if (token != null) {
         context.pushReplacementNamed(Dashboard.routeName);
       } else {
@@ -39,7 +37,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

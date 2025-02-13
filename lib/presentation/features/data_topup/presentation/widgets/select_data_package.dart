@@ -51,7 +51,7 @@ class _SelectDataPackageState extends State<SelectDataPackage> {
             underline: const SizedBox.shrink(),
             isExpanded: true,
             value: widget.selectedPlanType,
-             hint: Text('Select a plan type'),
+             hint: const Text('Select a plan type'),
             onChanged: (newValue) {
               print('pressed');
               setState(() {

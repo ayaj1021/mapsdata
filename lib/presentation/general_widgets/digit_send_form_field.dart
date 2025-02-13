@@ -158,6 +158,7 @@ class _DSFormfieldState extends State<DSFormfield> {
           onFieldSubmitted: widget.onFieldSubmitted,
           decoration: widget.decoration ??
               InputDecoration(
+                border: InputBorder.none,
                 fillColor: widget.backgroundColor,
                 prefixIcon: widget.prefixIcon,
                 counterText: '',

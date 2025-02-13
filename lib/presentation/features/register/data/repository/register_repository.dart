@@ -11,8 +11,12 @@ class RegisterRepository {
   final RestClient _restClient;
   Future<BaseResponse<SignUpResponse>> signUp(SignUpRequest request) async {
     try {
-      final res = await _restClient.signUp(request);
-      return BaseResponse(status: 'success', data: res);
+      final response = await _restClient.signUp(request);
+      return BaseResponse(
+          status: response.status.toString(),
+          data: response,
+          message: response.message);
+      //  return BaseResponse(status: 'success', data: res);
     } on DioException catch (e) {
       return AppException.handleError(e);
     }

@@ -1,17 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 
+// ignore: must_be_immutable
 class NetworkSelectionSection extends StatefulWidget {
-  const NetworkSelectionSection({super.key});
+  NetworkSelectionSection({super.key, required this.selectedLogoIndex});
 
+  int? selectedLogoIndex;
   @override
   State<NetworkSelectionSection> createState() =>
       _NetworkSelectionSectionState();
 }
 
 class _NetworkSelectionSectionState extends State<NetworkSelectionSection> {
-  int? selectedLogoIndex;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,7 +22,10 @@ class _NetworkSelectionSectionState extends State<NetworkSelectionSection> {
         borderRadius: BorderRadius.circular(12),
         color: AppColors.white,
       ),
-      child: Row(
+      child: 
+      
+      
+      Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(4, (index) {
           return Padding(
@@ -31,8 +36,10 @@ class _NetworkSelectionSectionState extends State<NetworkSelectionSection> {
                   onTap: () {
                     // handleLogoSelection(
                     //     logos[index].toString());
+                    log(widget.selectedLogoIndex.toString());
+                   // log(index.toString());
                     setState(() {
-                      selectedLogoIndex = index;
+                      widget.selectedLogoIndex = index;
                     });
                   },
                   child: Container(
@@ -41,7 +48,7 @@ class _NetworkSelectionSectionState extends State<NetworkSelectionSection> {
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: selectedLogoIndex == index
+                        color: widget.selectedLogoIndex == index
                             ? AppColors.primaryColor
                             : Colors.transparent),
                     child: CircleAvatar(
