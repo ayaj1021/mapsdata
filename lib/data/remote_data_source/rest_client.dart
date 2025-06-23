@@ -7,8 +7,12 @@ import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_request.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_response.dart';
 import 'package:mapsdata/presentation/features/data_topup/data/model/get_data_response_model.dart';
+import 'package:mapsdata/presentation/features/fund_account/data/model/link_bvn_nin_request.dart';
+import 'package:mapsdata/presentation/features/fund_account/data/model/link_nin_bvn_response.dart';
+import 'package:mapsdata/presentation/features/fund_account/data/model/virtual_account_response.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_request.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_response.dart';
+import 'package:mapsdata/presentation/features/notification/data/model/get_notification_response.dart';
 import 'package:mapsdata/presentation/features/register/data/models/sign_up_request.dart';
 import 'package:mapsdata/presentation/features/register/data/models/sign_up_response.dart';
 import 'package:retrofit/retrofit.dart';
@@ -29,10 +33,19 @@ abstract class RestClient {
     @Body() LoginRequest loginRequest,
   );
 
-  @GET('/api/data/plans')
-  Future<GetDataPlansResponse> getDataPlansDetails(
-      // @Queries() Map<String, dynamic> queries,
-      );
+  @POST('/user/kyc/link-bvn-nin')
+  Future<BvnLinkResponse> linkNinBvn(
+    @Body() LinkBvnNinRequest loginRequest,
+  );
+
+  @GET('/data/plans')
+  Future<GetDataPlansResponse> getDataPlansDetails();
+
+  @POST('/user/dashboard')
+  Future<NotificationResponse> getNotifications();
+
+  @POST('/fund-wallet/virtual-account')
+  Future<VirtualAccountResponse> virtualAccount();
 
   @POST('/api/airtime/topup')
   Future<AirtimeResponse> buyAirtime(

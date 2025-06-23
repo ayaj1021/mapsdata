@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
@@ -90,7 +90,8 @@ class DSPhoneFormField extends StatefulWidget {
 class _DSPhoneFormFieldState extends State<DSPhoneFormField> {
   ValueNotifier<String?> error = ValueNotifier(null);
   final ValueNotifier<Contact?> _selectedContact = ValueNotifier(null);
-  final FlutterContactPicker _contactPicker = FlutterContactPicker();
+  final FlutterNativeContactPicker _contactPicker =
+      FlutterNativeContactPicker();
 
   @override
   void dispose() {

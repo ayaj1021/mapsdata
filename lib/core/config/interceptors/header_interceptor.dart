@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:mapsdata/core/config/exception/logger.dart';
 import 'package:mapsdata/core/database/local_storage_impl.dart';
+import 'package:mapsdata/core/navigation/app_navigator.dart';
 
 class HeaderInterCeptor extends Interceptor {
   HeaderInterCeptor({
@@ -30,12 +32,13 @@ class HeaderInterCeptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     try {
-      final apikey = await secureStorage.getUserApiKey();
+      //  final apikey = await secureStorage.getUserApiKey();
+      final token = await secureStorage.getUserToken();
       // log("This is user accesstoken $apikey");
 
-      debugLog('[TOKEN]$apikey');
-      if (apikey.toString().isNotEmpty) {
-        options.headers['Authorization'] = 'Bearer $apikey';
+      debugLog('[TOKEN]$token');
+      if (token.toString().isNotEmpty) {
+        options.headers['Authorization'] = 'Bearer $token';
         // options.headers['authorization'] = '$token';
         // options.headers['Cookie'] = 'accessToken=${token.token}';
       }
@@ -66,23 +69,64 @@ class HeaderInterCeptor extends Interceptor {
     if (err.response?.statusCode == 401 ||
         err.response?.statusCode == 403 &&
             !_authRoutes.contains(err.requestOptions.path)) {
-      // onTokenExpired();
+      await _clearAuthData();
+
+      onTokenExpired();
     }
     handler.next(err);
     return err;
   }
 
-  @override
-  FutureOr<dynamic> onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
-    debugLog(
-      '[RESPONSE FROM ${response.requestOptions.path}]: ${response.data}',
-    );
-    handler.next(response);
-    return response;
+  void onTokenExpired() {
+    log('Token expired or unauthorized access detected.');
+    // Clear any stored user data
+    // Navigate to login screen
+    // Show logout message
+    AppNavigator.logout();
+
+    // Example implementations (choose what fits your app):
+
+    // If using Navigator:
+//  Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+
+    // If using GetX:
+    // Get.offAllNamed('/login');
+
+    // If using GoRouter:
+    // context.go('/login');
+
+    // If using Riverpod:
+    // ref.read(authStateProvider.notifier).logout();
+
+    // If using Bloc:
+    // context.read<AuthBloc>().add(LogoutEvent());
+
+    // Show a message to user
+    print('Session expired. Please login again.');
   }
+
+  Future<void> _clearAuthData() async {
+    try {
+      await secureStorage
+          .clearStorage(); // Implement this method in SecureStorage
+      // Clear any other auth-related data you might have
+      debugLog('[AUTH] Cleared authentication data due to 401/403');
+    } catch (e) {
+      debugLog('[AUTH] Error clearing auth data: $e');
+    }
+  }
+}
+
+@override
+FutureOr<dynamic> onResponse(
+  Response<dynamic> response,
+  ResponseInterceptorHandler handler,
+) {
+  debugLog(
+    '[RESPONSE FROM ${response.requestOptions.path}]: ${response.data}',
+  );
+  handler.next(response);
+  return response;
 }
 
 // Future<void> _refreshToken(

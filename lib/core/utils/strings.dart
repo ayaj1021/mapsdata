@@ -209,7 +209,7 @@ Click on the button above to get your virtual account to start transacting on th
   static const String signUp = 'Sign up';
   static const String shareReceipt = 'Share Receipt';
   static const String welcome = 'Welcome back!';
-  static const String nameWelcome = 'Junior, we’re glad you are back';
+  static const String nameWelcome = 'We’re glad you are back';
   static const String privacy = 'Privacy Policy';
   static const String resend = 'Resend';
   static const String review = 'Review';

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -113,11 +112,10 @@ class _DSFormfieldState extends State<DSFormfield> {
         if (widget.label != null)
           Text(
             widget.label!,
-            style:
-                context.textTheme.s12w700.copyWith(color: AppColors.primary1D1446),
+            style: context.textTheme.s12w700
+                .copyWith(color: AppColors.primary1D1446),
           ),
-        if (widget.label != null)
-          SizedBox(height: widget.labelSpace),
+        if (widget.label != null) SizedBox(height: widget.labelSpace),
         TextFormField(
           key: widget.key,
           textCapitalization: widget.textCapitalization,
@@ -158,7 +156,7 @@ class _DSFormfieldState extends State<DSFormfield> {
           onFieldSubmitted: widget.onFieldSubmitted,
           decoration: widget.decoration ??
               InputDecoration(
-                border: InputBorder.none,
+                // border: InputBorder.none,
                 fillColor: widget.backgroundColor,
                 prefixIcon: widget.prefixIcon,
                 counterText: '',
@@ -172,7 +170,7 @@ class _DSFormfieldState extends State<DSFormfield> {
         Stack(
           children: [
             if (error != null || widget.errorMessage != null) ...[
-             const VerticalSpacing(5),
+              const VerticalSpacing(5),
               Text(
                 widget.errorMessage ?? error!,
                 style: const TextStyle(

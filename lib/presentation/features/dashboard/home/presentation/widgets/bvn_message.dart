@@ -6,7 +6,8 @@ import 'package:mapsdata/core/utils/strings.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
-Future<dynamic> bvnNotificationAlert(BuildContext context) {
+Future<dynamic> bvnNotificationAlert(BuildContext context,
+    {required String message}) async {
   return showDialog(
       context: context,
       builder: (context) {
@@ -30,7 +31,7 @@ Future<dynamic> bvnNotificationAlert(BuildContext context) {
                 ),
                 const VerticalSpacing(12),
                 Text(
-                  Strings.bvnUpdateMessage,
+                  message,
                   style: context.textTheme.s14w400.copyWith(
                     color: AppColors.primarysWatch.shade400,
                   ),

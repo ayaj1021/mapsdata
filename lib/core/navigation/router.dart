@@ -1,9 +1,8 @@
-
-
 import 'package:flutter/widgets.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
 import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
+import 'package:mapsdata/presentation/features/fund_account/presentation/view/link_nin_bvn_view.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/forgot_password.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/login.dart';
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
@@ -23,8 +22,7 @@ class AppRouter {
     AirtimeTopupScreen.routeName: (context) => const AirtimeTopupScreen(),
     MapsVenture.routeName: (context) => const MapsVenture(),
     BuyDataScreen.routeName: (context) => const BuyDataScreen(),
-
-
+    LinkNinBvnView.routeName: (context) => const LinkNinBvnView(),
   };
   static Map<String, Widget Function(BuildContext)> get routes => _routes;
 }

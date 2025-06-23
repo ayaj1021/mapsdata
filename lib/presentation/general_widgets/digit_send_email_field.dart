@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -147,7 +146,7 @@ class _DSEmailFieldState extends State<DSEmailField> {
                 //filled: true,
                 fillColor: widget.backgroundColor,
                 prefixIcon: const Icon(Icons.email),
-                
+
                 // SvgPicture.asset(
                 //   'assets/icons/email.svg',
                 //   fit: BoxFit.scaleDown,
@@ -162,7 +161,7 @@ class _DSEmailFieldState extends State<DSEmailField> {
         Stack(
           children: [
             if (error != null || widget.errorMessage != null) ...[
-          const VerticalSpacing(5),
+              const VerticalSpacing(5),
               Text(
                 widget.errorMessage ?? error!,
                 style: const TextStyle(

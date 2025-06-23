@@ -15,16 +15,6 @@ class SignUpRequest extends Equatable {
     required this.confirmPassword,
   });
 
-//   {
-//     "firstname": "Femi",
-//     "lastname": "Dayo",
-//     "username": "Femo2",
-//     "email": "ayaj102+0@gmail.com",
-//     "number": "09123456789",
-//     "password": "123456",
-//     "confirm_password": "123456"
-// }
-
   factory SignUpRequest.fromJson(Map<String, dynamic> json) =>
       _$SignUpRequestFromJson(json);
 

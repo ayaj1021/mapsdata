@@ -23,14 +23,6 @@ class LoginRepository {
       return AppException.handleError(e);
     }
   }
-
-  // Future<BaseResponse> logout() async {
-  //   try {
-  //   //  return await _restClient.logout();
-  //   } on DioException catch (e) {
-  //     return AppException.handleError(e);
-  //   }
-  // }
 }
 
 final loginRepositoryProvider = Provider<LoginRepository>(

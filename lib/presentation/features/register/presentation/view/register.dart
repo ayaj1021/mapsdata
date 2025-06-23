@@ -87,7 +87,7 @@ class _RegisterState extends ConsumerState<Register> {
           data: SignUpRequest(
             firstname: _firstNamecontroller.text.trim(),
             lastname: _lastNamecontroller.text.trim(),
-            email: _emailAddressController.text.trim(),
+            email: _emailAddressController.text.toLowerCase().trim(),
             username: _usernamecontroller.text.trim(),
             number: _phoneNumbercontroller.text.trim(),
             password: _passwordController.text.trim(),
@@ -97,7 +97,7 @@ class _RegisterState extends ConsumerState<Register> {
             context.showError(message: error);
           },
           onSuccess: (message) {
-          //  context.hideOverLay();
+            //  context.hideOverLay();
             context.showSuccess(
                 message: 'Registration has been completed successfully.');
             context.replaceNamed(Login.routeName);

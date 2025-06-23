@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
+import 'package:mapsdata/presentation/features/fund_account/presentation/view/fund_account_options.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
 class WalletBalanceSection extends StatelessWidget {
-  const WalletBalanceSection({super.key});
+  const WalletBalanceSection({super.key, required this.walletBalance});
+  final String walletBalance;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class WalletBalanceSection extends StatelessWidget {
               ),
               const VerticalSpacing(30),
               Text(
-                '₦35,000,000.00',
+                '₦$walletBalance',
                 style:
                     context.textTheme.s14w600.copyWith(color: AppColors.white),
               ),
@@ -57,22 +59,38 @@ class WalletBalanceSection extends StatelessWidget {
                     context.textTheme.s12w400.copyWith(color: AppColors.white),
               ),
               const VerticalSpacing(30),
-              Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: AppColors.white,
-                  ),
-                  child: Text(
-                    'Fund Account',
-                    style: context.textTheme.s12w600
-                        .copyWith(color: AppColors.primaryColor),
-                  )
+              GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                      showDragHandle: true,
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(32),
+                        topLeft: Radius.circular(32),
+                      )),
+                      context: context,
+                      builder: (_) {
+                        return const FundAccountOptions();
+                      });
+                },
+                child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.white,
+                    ),
+                    child: Text(
+                      'Fund Account',
+                      style: context.textTheme.s12w600
+                          .copyWith(color: AppColors.primaryColor),
+                    )
 
-                  //  MapsDataSendButton(onTap: (){}, title: 'Fund Account'),
+                    //  MapsDataSendButton(onTap: (){}, title: 'Fund Account'),
 
-                  )
+                    ),
+              )
             ],
           ),
         ],

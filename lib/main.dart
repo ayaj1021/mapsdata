@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mapsdata/core/navigation/app_navigator.dart';
 import 'package:mapsdata/core/navigation/router.dart';
 import 'package:mapsdata/presentation/general_widgets/app_overlay.dart';
 
@@ -40,6 +41,7 @@ class _MyAppState extends State<MyApp> {
               child: AppOverLay(
                 controller: _controller,
                 child: MaterialApp(
+                  navigatorKey: AppNavigator.navigatorKey,
                   debugShowCheckedModeBanner: false,
                   routes: AppRouter.routes,
                   initialRoute: '/',

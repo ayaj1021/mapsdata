@@ -1,48 +1,9 @@
 import 'dart:async';
-
+import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// class LocalStorageImpl implements LocalStorage {
-//   LocalStorageImpl(this.box);
-//   final Box box;
-//   @override
-//   Future<void> put(dynamic key, dynamic value) async {
-//     return box.put(key, value);
-//   }
-
-//   @override
-//   dynamic get<T>(String key) {
-//     return box.get(key);
-//   }
-
-//   @override
-//   dynamic getAt(int key) {
-//     return box.getAt(key);
-//   }
-
-//   @override
-//   Future<int> add(dynamic value) {
-//     return box.add(value);
-//   }
-
-//   @override
-//   Future<int> clear() {
-//     return box.clear();
-//   }
-
-//   @override
-//   Future<void> delete(dynamic value) {
-//     return box.delete(value);
-//   }
-
-//   @override
-//   Future<void> putAll(Map<String, dynamic> entries) async {
-//     return box.putAll(entries);
-//   }
-// }
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mapsdata/presentation/features/login/data/models/login_response.dart';
 
 class SecureStorage {
   SecureStorage._();
@@ -60,7 +21,7 @@ class SecureStorage {
       );
 
   Future<void> saveUserEmail(String userEmail) async {
-   await _storage.write(key: 'user_email', value: userEmail);
+    await _storage.write(key: 'user_email', value: userEmail);
   }
 
   Future<String?> getUserEmail() async {
@@ -69,7 +30,7 @@ class SecureStorage {
   }
 
   Future<void> saveUserForgotPasswordCode(String userEmail) async {
-   await _storage.write(key: 'code', value: userEmail);
+    await _storage.write(key: 'code', value: userEmail);
   }
 
   Future<String?> getUserForgotPasswordCode() async {
@@ -78,7 +39,7 @@ class SecureStorage {
   }
 
   Future<void> saveUserFirstName(String userEmail) async {
-  await  _storage.write(key: 'firstName', value: userEmail);
+    await _storage.write(key: 'firstName', value: userEmail);
   }
 
   Future<String?> getUserFirstName() async {
@@ -87,7 +48,7 @@ class SecureStorage {
   }
 
   Future<void> saveUserPassword(String userPassword) async {
-   await _storage.write(key: 'user_password', value: userPassword);
+    await _storage.write(key: 'user_password', value: userPassword);
   }
 
   Future<String?> getUserPassword() async {
@@ -96,7 +57,7 @@ class SecureStorage {
   }
 
   Future<void> saveUserToken(String token) async {
-   await _storage.write(key: 'token', value: token);
+    await _storage.write(key: 'token', value: token);
   }
 
   Future<String?> getUserToken() async {
@@ -104,9 +65,8 @@ class SecureStorage {
     return value;
   }
 
-
   Future<void> saveUserApiKey(String token) async {
-   await _storage.write(key: 'api_key', value: token);
+    await _storage.write(key: 'api_key', value: token);
   }
 
   Future<String?> getUserApiKey() async {
@@ -115,7 +75,7 @@ class SecureStorage {
   }
 
   Future<void> saveResetPasswordToken(String token) async {
-  await  _storage.write(key: 'token', value: token);
+    await _storage.write(key: 'token', value: token);
   }
 
   Future<String?> getResetPasswordToken() async {
@@ -124,7 +84,7 @@ class SecureStorage {
   }
 
   Future<void> saveUserId(int id) async {
-  await  _storage.write(key: 'id', value: id.toString());
+    await _storage.write(key: 'id', value: id.toString());
   }
 
   Future<String?> getUserId() async {
@@ -133,12 +93,30 @@ class SecureStorage {
   }
 
   Future<void> saveUserAccountName(String userEmail) async {
-  await  _storage.write(key: 'user_account_name', value: userEmail);
+    await _storage.write(key: 'user_account_name', value: userEmail);
   }
 
   Future<String?> getUserAccountName() async {
     String? value = await _storage.read(key: 'user_account_name');
     return value;
+  }
+
+  Future<void> storeProfile(User profileResponse) async {
+    final String jsonString = jsonEncode(profileResponse.toJson());
+    await _storage.write(key: 'user_profile', value: jsonString);
+  }
+
+  Future<User?> getStoredProfile() async {
+    final String? jsonString = await _storage.read(key: 'user_profile');
+
+    if (jsonString == null) return null;
+
+    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    return User.fromJson(jsonMap);
+  }
+
+  Future<void> clearStorage() async {
+    await _storage.deleteAll();
   }
 
   // Future<void> saveUserDetails(

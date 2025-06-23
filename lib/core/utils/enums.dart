@@ -6,18 +6,19 @@ enum LoginLoadState { loading, idle, success, error, unverified }
 
 enum CurrentState { loggedIn, onboarded, initial }
 
-enum OverLayType { loader, message, none, toast}
+enum OverLayType { loader, message, none, toast }
 
 enum MessageType { error, success }
 
 enum OtpType { email, phone }
 
-
 enum BiometricDataType { password, pin }
 
-enum Gender { MALE, FEMALE }
+enum HomeSessionState { logout, initial }
 
-enum Currency { NGN, USD }
+// enum Gender { MALE, FEMALE }
+
+// enum Currency { NGN, USD }
 
 @JsonEnum()
 enum ReferenceType {

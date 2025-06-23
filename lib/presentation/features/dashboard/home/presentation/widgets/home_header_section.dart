@@ -5,7 +5,8 @@ import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
 class HomeHeaderSection extends StatelessWidget {
-  const HomeHeaderSection({super.key});
+  const HomeHeaderSection({super.key, required this.userName});
+  final String userName; // Placeholder for user name
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +22,13 @@ class HomeHeaderSection extends StatelessWidget {
             ),
             const HorizontalSpacing(7),
             Text(
-              'Welcome John',
+              'Welcome $userName',
               style: context.textTheme.s18w500
                   .copyWith(color: AppColors.primaryColor),
             )
           ],
         ),
-        const Icon(Icons.notifications_outlined),
+        //   const Icon(Icons.notifications_outlined),
       ],
     );
   }

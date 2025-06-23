@@ -1,4 +1,4 @@
-package com.example.mapsdata
+package com.app.mapsdata
 
 import io.flutter.embedding.android.FlutterActivity
 
