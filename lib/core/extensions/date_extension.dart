@@ -9,14 +9,13 @@ extension DateExtension on DateTime {
 
   DateTime get splitDateOnly => DateTime.parse(toString().split(' ')[0]);
 
-  String get toTime =>
-      DateFormat('hh:mm a').format(this.toLocal()).toLowerCase();
+  String get toTime => DateFormat('hh:mm a').format(toLocal()).toLowerCase();
 
-  String get toDate => DateFormat('MMM d, y').format(this.toLocal());
+  String get toDate => DateFormat('MMM d, y').format(toLocal());
 
-  String get getHeaderDate => this.day == DateTime.now().day
+  String get getHeaderDate => day == DateTime.now().day
       ? 'Today'
-      : this.day == DateTime.now().day - 1
+      : day == DateTime.now().day - 1
           ? 'Yesterday'
           : DateFormat('MMM dd, yyyy').format(this);
 

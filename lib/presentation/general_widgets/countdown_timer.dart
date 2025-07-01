@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 
 class _CountDownTimer extends AnimatedWidget {
-  const _CountDownTimer({required this.animation, super.key})
+  const _CountDownTimer({required this.animation})
       : super(listenable: animation);
   final Animation<int> animation;
 

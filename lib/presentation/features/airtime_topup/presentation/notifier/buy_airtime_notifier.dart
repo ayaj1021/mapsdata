@@ -1,45 +1,44 @@
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mapsdata/core/config/base_state/base_state.dart';
 import 'package:mapsdata/core/config/exception/message_exception.dart';
 import 'package:mapsdata/core/utils/enums.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_request.dart';
+import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_response.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/repository/buy_airtime_repository.dart';
-import 'package:mapsdata/presentation/features/airtime_topup/presentation/notifier/buy_airtime_notifier_state.dart';
 
-class BuyAirtimeNotifier extends AutoDisposeNotifier<BuyAirtimeNotiferState> {
+class BuyAirtimeNotifier
+    extends AutoDisposeNotifier<BaseState<BuyAirtimeResponse>> {
   BuyAirtimeNotifier();
-  late final BuyAirtimeRepository _buyAirtimeRepository;
+
+  late BuyAirtimeRepository _repository;
+
   @override
-  BuyAirtimeNotiferState build() {
-    _buyAirtimeRepository = ref.read(buyAirtimeRepositoryProvider);
-    return BuyAirtimeNotiferState.initial();
+  BaseState<BuyAirtimeResponse> build() {
+    _repository = ref.read(buyAirtimeRepositoryProvider);
+
+    return BaseState<BuyAirtimeResponse>.initial();
   }
 
-  Future<void> login({
-    required BuyAirtimeRequest data,
-    required void Function(String error) onError,
+  Future<void> buyAirtime({
+    required BuyAirtimeRequest request,
+    required void Function(String message) onError,
     required void Function(String message) onSuccess,
   }) async {
+    state = state.copyWith(state: LoadState.loading);
+
     try {
-      state = state.copyWith(buyAirtimeState: LoadState.loading);
-      final value = await _buyAirtimeRepository.buyAirtime(
-        data,
-      );
-      if (value.status == 'failed') throw value.message.toException;
-      log(value.message.toString());
+      final value = await _repository.buyAirtime(request);
 
-      state = state.copyWith(buyAirtimeState: LoadState.idle);
+      if (value.status == 'failed') throw value.message?.toException ?? '';
 
-      onSuccess(value.message.toString());
+      state = state.copyWith(state: LoadState.idle, data: (value.data));
+      onSuccess(value.message ?? '');
     } catch (e) {
+      state = state.copyWith(state: LoadState.idle);
       onError(e.toString());
-      state = state.copyWith(buyAirtimeState: LoadState.idle);
     }
   }
 }
 
-final buyAirtimeNotifer =
-    NotifierProvider.autoDispose<BuyAirtimeNotifier, BuyAirtimeNotiferState>(
-  BuyAirtimeNotifier.new,
-);
+final buyAirtimeNotifierProvider = NotifierProvider.autoDispose<
+    BuyAirtimeNotifier, BaseState<BuyAirtimeResponse>>(BuyAirtimeNotifier.new);

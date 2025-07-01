@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/config/base_response/base_response.dart';
@@ -10,16 +12,14 @@ class BuyAirtimeRepository {
   BuyAirtimeRepository(this._restClient);
   final RestClient _restClient;
 
-  Future<BaseResponse<AirtimeResponse>> buyAirtime(
+  Future<BaseResponse<BuyAirtimeResponse>> buyAirtime(
       BuyAirtimeRequest airtimeRequest) async {
     try {
-      final response = await _restClient.buyAirtime(airtimeRequest);
-      //  return BaseResponse(status: 'success', data: response);
+      final res = await _restClient.buyAirtime(airtimeRequest);
+      log('This is response ${res.message}');
 
       return BaseResponse(
-          status: response.status.toString(),
-          data: response,
-          message: response.message);
+          status: res.status.toString(), data: res, message: res.message);
     } on DioException catch (e) {
       return AppException.handleError(e);
     }

@@ -1,29 +1,31 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+class BuyAirtimeRequest {
+  final String id;
+  final String pin;
+  final String number;
+  final String amount;
 
-part 'buy_airtime_request.g.dart';
-
-@JsonSerializable(createFactory: false)
-class BuyAirtimeRequest implements EquatableMixin {
-  const BuyAirtimeRequest({
+  BuyAirtimeRequest({
     required this.id,
     required this.pin,
     required this.number,
     required this.amount,
   });
 
-  final String id;
-  final String pin;
-  final String number;
-  final String amount;
+  factory BuyAirtimeRequest.fromJson(Map<String, dynamic> json) {
+    return BuyAirtimeRequest(
+      id: json['id'],
+      pin: json['pin'],
+      number: json['number'],
+      amount: json['amount'],
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$BuyAirtimeRequestToJson(this);
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  List<Object> get props => [id, pin, number];
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  bool? get stringify => true;
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'pin': pin,
+      'number': number,
+      'amount': amount,
+    };
+  }
 }

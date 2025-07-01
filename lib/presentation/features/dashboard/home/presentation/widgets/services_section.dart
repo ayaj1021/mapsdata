@@ -5,6 +5,7 @@ import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/a
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/widgets/quick_action_tabs.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
+import 'package:mapsdata/presentation/features/result_checker/presentation/view/result_checker_view.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -57,10 +58,11 @@ class ServicesSection extends StatelessWidget {
                   title: 'Buy & Sell btc'),
             ],
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               QuickActionTabs(
+                  onTap: () => context.pushNamed(ResultCheckerScreen.routeName),
                   image: 'assets/svg/education_new.svg',
                   title: 'Result Checker'),
               HorizontalSpacing(60),

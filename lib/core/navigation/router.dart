@@ -8,6 +8,7 @@ import 'package:mapsdata/presentation/features/login/presentation/view/login.dar
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
 import 'package:mapsdata/presentation/features/onboarding/presentation/view/onboarding_view.dart';
 import 'package:mapsdata/presentation/features/register/presentation/view/register.dart';
+import 'package:mapsdata/presentation/features/result_checker/presentation/view/result_checker_view.dart';
 import 'package:mapsdata/presentation/general_widgets/splash_screen.dart';
 
 class AppRouter {
@@ -23,6 +24,7 @@ class AppRouter {
     MapsVenture.routeName: (context) => const MapsVenture(),
     BuyDataScreen.routeName: (context) => const BuyDataScreen(),
     LinkNinBvnView.routeName: (context) => const LinkNinBvnView(),
+    ResultCheckerScreen.routeName: (context) => const ResultCheckerScreen(),
   };
   static Map<String, Widget Function(BuildContext)> get routes => _routes;
 }

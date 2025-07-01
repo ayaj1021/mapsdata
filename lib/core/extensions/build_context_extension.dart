@@ -75,12 +75,10 @@ extension NavigationExtension on BuildContext {
   }
 }
 
-
-
 extension CopyToClipboard on BuildContext {
   void copyToClipboard(String value) {
     Clipboard.setData(ClipboardData(text: value)).then(
-      (value) => this.showToast(message: 'Copied to clipboard'),
+      (value) => showToast(message: 'Copied to clipboard'),
     );
   }
 }

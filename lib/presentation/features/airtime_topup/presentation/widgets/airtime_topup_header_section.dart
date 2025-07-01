@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mapsdata/core/extensions/build_context_extension.dart';
 import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
-import 'package:mapsdata/core/utils/strings.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
-class AirtimeTopupHeaderSection extends StatelessWidget {
-  const AirtimeTopupHeaderSection({super.key});
+class CustomAppHeaderSection extends StatelessWidget {
+  const CustomAppHeaderSection({super.key, required this.title});
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class AirtimeTopupHeaderSection extends StatelessWidget {
         ),
         const HorizontalSpacing(100),
         Text(
-          Strings.airtimeTopUp,
+          title,
           style: context.textTheme.s16w700.copyWith(
             color: AppColors.primaryColor,
           ),

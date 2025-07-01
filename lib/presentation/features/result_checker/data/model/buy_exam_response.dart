@@ -1,16 +1,16 @@
-class BuyAirtimeResponse {
+class BuyExamResponse {
   final int? code;
   final String? status;
   final String? message;
 
-  BuyAirtimeResponse({
+  BuyExamResponse({
     this.code,
     this.status,
     this.message,
   });
 
-  factory BuyAirtimeResponse.fromJson(Map<String, dynamic> json) {
-    return BuyAirtimeResponse(
+  factory BuyExamResponse.fromJson(Map<String, dynamic> json) {
+    return BuyExamResponse(
       code: json['code'] as int?,
       status: json['status'] as String?,
       message: json['message'] as String?,

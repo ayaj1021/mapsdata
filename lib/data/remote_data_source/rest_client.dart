@@ -6,6 +6,9 @@ import 'package:mapsdata/core/config/interceptors/header_interceptor.dart';
 import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_request.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_response.dart';
+import 'package:mapsdata/presentation/features/airtime_topup/data/model/fetch_airtime_list_model.dart';
+import 'package:mapsdata/presentation/features/data_topup/data/model/buy_data_request.dart';
+import 'package:mapsdata/presentation/features/data_topup/data/model/buy_data_response.dart';
 import 'package:mapsdata/presentation/features/data_topup/data/model/get_data_response_model.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/link_bvn_nin_request.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/link_nin_bvn_response.dart';
@@ -15,6 +18,9 @@ import 'package:mapsdata/presentation/features/login/data/models/login_response.
 import 'package:mapsdata/presentation/features/notification/data/model/get_notification_response.dart';
 import 'package:mapsdata/presentation/features/register/data/models/sign_up_request.dart';
 import 'package:mapsdata/presentation/features/register/data/models/sign_up_response.dart';
+import 'package:mapsdata/presentation/features/result_checker/data/model/buy_exam_request.dart';
+import 'package:mapsdata/presentation/features/result_checker/data/model/buy_exam_response.dart';
+import 'package:mapsdata/presentation/features/result_checker/data/model/get_all_exams_model.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'rest_client.g.dart';
@@ -38,8 +44,24 @@ abstract class RestClient {
     @Body() LinkBvnNinRequest loginRequest,
   );
 
-  @GET('/data/plans')
+  @POST('/data/plans')
   Future<GetDataPlansResponse> getDataPlansDetails();
+
+  @POST('/airtime')
+  Future<GetAirtimePlansResponse> getAirtimePlansDetails();
+
+  @POST('/exam')
+  Future<ExamResponse> getResultServices();
+
+  @POST('/data/topup')
+  Future<BuyDataResponse> buyData(
+    @Body() BuyDataRequest request,
+  );
+
+  @POST('/exam/pin')
+  Future<BuyExamResponse> buyExam(
+    @Body() BuyExamRequest request,
+  );
 
   @POST('/user/dashboard')
   Future<NotificationResponse> getNotifications();
@@ -47,86 +69,10 @@ abstract class RestClient {
   @POST('/fund-wallet/virtual-account')
   Future<VirtualAccountResponse> virtualAccount();
 
-  @POST('/api/airtime/topup')
-  Future<AirtimeResponse> buyAirtime(
+  @POST('/airtime/topup')
+  Future<BuyAirtimeResponse> buyAirtime(
     @Body() BuyAirtimeRequest buyAirtimeRequest,
   );
-
-//   @POST('/auth/resend-otp')
-//   Future<BaseResponse<dynamic>> resendOTP(
-//     @Body() ResendOtpRequest request,
-//   );
-
-//   @POST('/auth/verify-reset-otp')
-//   Future<BaseResponse<VerifyResetPasswordOtpResponse>> verifyResetPasswordOtp(
-//     @Body() ResetPasswordOtpRequest request,
-//   );
-
-//   @POST('/auth/reset-password')
-//   Future<BaseResponse<ResetPasswordResponse>> resetPassword(
-//     @Body() ResetPasswordRequest request,
-//   );
-
-//   @POST('/auth/verify-signup-otp')
-//   Future<BaseResponse<LoginResponse>> verifySignUpOtp(
-//     @Body() VerifyOtpRequest request,
-//   );
-
-//   @POST('/auth/update-password')
-//   Future<BaseResponse<ChangePasswordResponse>> changePassword(
-//     @Body() ChangePasswordRequest request,
-//   );
-
-//   @GET('/bills/providers/{name}')
-//   Future<BaseResponse<List<BillPaymentProvider>>> getBillPaymentProviders(
-//     @Path() String name,
-//   );
-
-//   @GET('/bills/packages/{providerId}')
-//   Future<BaseResponse<List<ProviderPackage>>> getPackages(
-//     @Path() String providerId,
-//   );
-
-//   @POST('/bills/pay')
-//   Future<BaseResponse<BillPaymentResponse>> makeBillPayment(
-//     @Body() MakeBillPaymentRequest body,
-//   );
-
-//   @POST('/auth/forgot-password')
-//   Future<BaseResponse<dynamic>> forgotPassword(
-//     @Body() ForgotPasswordRequest body,
-//   );
-
-//   @GET('/bills/verify-recipient/{providerId}/{recipient}')
-//   Future<BaseResponse<LookupRecipientResponse>> lookupRecipient(
-//     @Path() String providerId,
-//     @Path() String recipient,
-//   );
-
-//   @GET('/transactions')
-//   Future<BaseResponse<TransactionResponse>> getTransactions(
-//     @Queries() Map<String, dynamic> queries,
-//   );
-
-//   @GET('/transactions/{id}')
-//   Future<BaseResponse<SingleTransactionResponse>> getTransactionDetails({
-//     @Path() required String id,
-//   });
-
-//   @POST('/auth/logout')
-//   Future<BaseResponse<dynamic>> logout();
-
-//   @GET('/currencies')
-//   Future<BaseResponse<List<ExchangeCurrency>>> getCurrencies();
-
-//   @GET('/wallet')
-//   Future<BaseResponse<Wallet>> getWallet();
-
-//   @POST('/verification/level-1')
-//   Future<BaseResponse<dynamic>> levelOneVerification(
-//     @Body() LevelOneVerfificationModel body,
-//   );
-// }
 }
 
 ProviderFamily<Dio, BaseEnv> _dio = Provider.family<Dio, BaseEnv>(

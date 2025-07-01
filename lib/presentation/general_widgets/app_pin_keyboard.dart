@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,7 +21,7 @@ class PayOffPinKeyboard extends StatefulWidget {
 }
 
 class _PayOffPinKeyboardState extends State<PayOffPinKeyboard> {
-  TextEditingController _controller = TextEditingController();
+  final _controller = TextEditingController();
   String pin = '';
 
   @override
@@ -44,7 +43,7 @@ class _PayOffPinKeyboardState extends State<PayOffPinKeyboard> {
             length: widget.length,
           ),
         ),
-     VerticalSpacing(40),
+        VerticalSpacing(40),
 
         ///use the for loop to create the three rows for the keyboard
         for (var i = 0; i < 3; i++)
