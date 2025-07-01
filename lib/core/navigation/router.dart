@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
 import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
+import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
 import 'package:mapsdata/presentation/features/fund_account/presentation/view/link_nin_bvn_view.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/forgot_password.dart';
@@ -25,6 +26,7 @@ class AppRouter {
     BuyDataScreen.routeName: (context) => const BuyDataScreen(),
     LinkNinBvnView.routeName: (context) => const LinkNinBvnView(),
     ResultCheckerScreen.routeName: (context) => const ResultCheckerScreen(),
+    DataCardScreen.routeName: (context) => const DataCardScreen(),
   };
   static Map<String, Widget Function(BuildContext)> get routes => _routes;
 }

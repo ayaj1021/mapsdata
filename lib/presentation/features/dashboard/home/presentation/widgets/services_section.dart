@@ -3,10 +3,10 @@ import 'package:mapsdata/core/extensions/build_context_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/widgets/quick_action_tabs.dart';
+import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
 import 'package:mapsdata/presentation/features/result_checker/presentation/view/result_checker_view.dart';
-import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ServicesSection extends StatelessWidget {
@@ -59,15 +59,18 @@ class ServicesSection extends StatelessWidget {
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               QuickActionTabs(
                   onTap: () => context.pushNamed(ResultCheckerScreen.routeName),
                   image: 'assets/svg/education_new.svg',
                   title: 'Result Checker'),
-              HorizontalSpacing(60),
               QuickActionTabs(
                   image: 'assets/svg/cable_new.svg', title: 'Cable'),
+              QuickActionTabs(
+                  onTap: () => context.pushNamed(DataCardScreen.routeName),
+                  image: 'assets/svg/data_new.svg',
+                  title: 'Data Card'),
             ],
           ),
         ],
