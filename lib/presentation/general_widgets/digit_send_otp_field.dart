@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -94,7 +93,7 @@ class _DigitSendOtpFieldState extends State<DigitSendOtpField> {
             focusNode: _focusNode,
             forceErrorState: widget.hasError,
             onCompleted: widget.onCompleted,
-          //  obscureText: widget.obscureText,
+            //  obscureText: widget.obscureText,
             onChanged: widget.onChanged,
             autofocus: widget.autoFocus,
             obscuringWidget: Container(
@@ -156,7 +155,7 @@ class _DigitSendOtpFieldState extends State<DigitSendOtpField> {
 
   DSPinTheme get errorPinTheme => DSPinTheme(
         context: context,
-        color: AppColors.red.withOpacity(.1),
+        color: AppColors.red.withValues(alpha: 0.1),
         width: widget.boxWidth,
         height: widget.boxHeight,
       );

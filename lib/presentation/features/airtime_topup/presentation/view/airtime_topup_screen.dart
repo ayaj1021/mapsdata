@@ -38,7 +38,9 @@ class _AirtimeTopupScreenState extends ConsumerState<AirtimeTopupScreen> {
       await ref
           .read(getAirtimePlansNotifierProvider.notifier)
           .getAirtimePlans();
-      setPinNotificationAlert(context);
+      if (mounted) {
+        setPinNotificationAlert(context);
+      }
     });
     _phoneNumberController = TextEditingController()..addListener(_listener);
     _airtimeAmountController = TextEditingController()..addListener(_listener);

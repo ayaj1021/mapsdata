@@ -83,26 +83,6 @@ class HeaderInterCeptor extends Interceptor {
     // Navigate to login screen
     // Show logout message
     AppNavigator.logout();
-
-    // Example implementations (choose what fits your app):
-
-    // If using Navigator:
-//  Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-
-    // If using GetX:
-    // Get.offAllNamed('/login');
-
-    // If using GoRouter:
-    // context.go('/login');
-
-    // If using Riverpod:
-    // ref.read(authStateProvider.notifier).logout();
-
-    // If using Bloc:
-    // context.read<AuthBloc>().add(LogoutEvent());
-
-    // Show a message to user
-    print('Session expired. Please login again.');
   }
 
   Future<void> _clearAuthData() async {

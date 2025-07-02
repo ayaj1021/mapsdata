@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -45,7 +44,7 @@ class DsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return BackdropFilter(
       filter: ColorFilter.mode(
-        Colors.black.withOpacity(0.2),
+        Colors.black.withAlpha((0.2 * 255).toInt()),
         BlendMode.srcOver,
       ),
       child: Container(

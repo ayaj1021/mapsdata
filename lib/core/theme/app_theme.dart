@@ -7,7 +7,7 @@ class AppThemes {
     final errorInputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(16.r),
       borderSide: BorderSide(
-        color: AppColors.red.withOpacity(.4),
+        color: AppColors.red.withAlpha((0.4 * 255).toInt()),
       ),
     );
     final focusedBorder = OutlineInputBorder(
@@ -27,7 +27,7 @@ class AppThemes {
       colorScheme: ColorScheme.light(
         primary: AppColors.primaryColor,
         secondary: AppColors.secondaryColor,
-        onErrorContainer: AppColors.red.withOpacity(.3),
+        onErrorContainer: AppColors.red.withAlpha((0.3 * 255).toInt()),
       ),
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: TextStyle(

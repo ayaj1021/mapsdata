@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -56,7 +55,7 @@ class AppOverLayState extends State<AppOverLay> {
             if (listen.type == OverLayType.loader) {
               return Positioned.fill(
                 child: Material(
-                  color: Colors.black.withOpacity(.5),
+                  color: Colors.black.withAlpha((0.5 * 255).toInt()),
                   child: AppLoader(
                     color: listen.color ?? Colors.white,
                   ),
