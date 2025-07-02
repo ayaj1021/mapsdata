@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/extensions/overlay_extension.dart';
+import 'package:mapsdata/core/extensions/text_theme_extension.dart';
+import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/core/utils/enums.dart';
 import 'package:mapsdata/core/utils/page_loader.dart';
+import 'package:mapsdata/core/utils/validators.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/airtime_topup_header_section.dart';
-import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/select_phone_number_section.dart';
+import 'package:mapsdata/presentation/features/data_card/data/model/buy_data_card_request.dart';
 import 'package:mapsdata/presentation/features/data_card/data/model/get_data_cards_response.dart';
+import 'package:mapsdata/presentation/features/data_card/presentation/notifier/buy_data_card_notifier.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/notifier/get_data_cards_notifier.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/widgets/data_card_network_dropdown.dart';
-import 'package:mapsdata/presentation/features/data_card/presentation/widgets/data_card_plans_section.dart';
-import 'package:mapsdata/presentation/features/data_topup/data/model/buy_data_request.dart';
-import 'package:mapsdata/presentation/features/data_topup/presentation/notifier/buy_data_notifier.dart';
+import 'package:mapsdata/presentation/features/data_card/presentation/widgets/data_card_plan_section.dart';
 import 'package:mapsdata/presentation/features/notification/notifier/get_notification_notifier.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
+import 'package:mapsdata/presentation/general_widgets/digit_send_form_field.dart';
 import 'package:mapsdata/presentation/general_widgets/ds_bottom_sheet.dart';
 import 'package:mapsdata/presentation/general_widgets/input_pin_bottomsheet.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
@@ -26,6 +29,9 @@ class DataCardScreen extends ConsumerStatefulWidget {
 }
 
 class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
+  final ValueNotifier<bool> _isEnabled = ValueNotifier(false);
+  late TextEditingController _quantityController;
+  late TextEditingController _nameOnCardController;
   @override
   void initState() {
     super.initState();
@@ -33,15 +39,26 @@ class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(getDataCardsNotifierProvider.notifier).getAllDataPlans();
     });
+    _quantityController = TextEditingController()..addListener(_listener);
+    _nameOnCardController = TextEditingController()..addListener(_listener);
   }
 
   List<DataCardsPlan> filteredPlans = [];
 
+  num totalAmount = 1;
+
+  void _listener() {
+    _isEnabled.value = _quantityController.text.isNotEmpty &&
+        _nameOnCardController.text.isNotEmpty;
+  }
+
   void _onDataProviderSelected(
-      String selectedNetworkProvider, List<DataCardsPlan> allPlans) {
+    String selectedNetworkProvider,
+    List<DataCardsPlan> allPlans,
+  ) {
     setState(() {
       _selectedNetwork = selectedNetworkProvider;
-      _selectedType = null; // Reset type when network changes
+
       _selectedPlan = null; // Reset plan when network changes
       _selectedPlanPrice = null; // Reset price when network changes
       _updateFilteredPlans(
@@ -51,28 +68,19 @@ class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
 
   void _updateFilteredPlans(List<DataCardsPlan> allPlans) {
     filteredPlans = allPlans.where((plan) {
-      final matchesNetwork =
-          _selectedNetwork == null || plan.network == _selectedNetwork;
-      final matchesType =
-          selectedPlanType == null || plan.type == selectedPlanType;
-      return matchesNetwork && matchesType;
+      final matchesNetwork = _selectedNetwork == null ||
+          plan.network?.trim().toLowerCase() ==
+              _selectedNetwork!.trim().toLowerCase();
+      return matchesNetwork;
     }).toList();
-  }
-
-  void _onTypeSelected(String selectedType, List<DataCardsPlan>? dataPlans) {
-    setState(() {
-      _selectedType = selectedType;
-      _selectedPlan = null; // Reset plan when type changes
-      _selectedPlanPrice = null; // Reset price when type changes
-      _updateFilteredPlans(
-          dataPlans ?? []); // Update filtered plans based on the new type
-    });
   }
 
   void _onPlanSelected(String selectedNetwork) {
     setState(() {
       _selectedPlan = selectedNetwork;
       _selectedPlanPrice = null;
+      totalAmount = 1;
+      _quantityController.text = '';
     });
   }
 
@@ -94,8 +102,8 @@ class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
     });
   }
 
-  final _phoneNumberController = TextEditingController();
   final _pinController = TextEditingController();
+
   String? selectedPlanType;
   int? selectedLogoIndex;
   String? _selectedNetwork;
@@ -107,10 +115,9 @@ class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
   String? _selectedNid;
   String? _selectedDataId;
   bool isEnabled() {
-    if (_selectedNetwork != null ||
-        _phoneNumberController.text.isNotEmpty ||
-        _selectedType != null ||
-        _selectedPlan != null) {
+    if (_selectedNetwork != null &&
+        _quantityController.text.isNotEmpty &&
+        _nameOnCardController.text.isNotEmpty) {
       return true;
     } else {
       return false;
@@ -120,20 +127,25 @@ class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
   @override
   void dispose() {
     _pinController.dispose();
-    _phoneNumberController.dispose();
+    _nameOnCardController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(
-        buyDataNotifierProvider.select((state) => state.state.isLoading));
+        buyDataCardNotifierProvider.select((state) => state.state.isLoading));
     final dataPlans = ref.watch(getDataCardsNotifierProvider
         .select((v) => v.data?.plans?.toList() ?? []));
+
+    final dataPlanNetworks = ref.watch(getDataCardsNotifierProvider
+        .select((v) => v.data?.networks?.toList() ?? []));
 
     final userData =
         ref.watch(getNotificationNotifer.select((v) => v.data?.user));
     final userBalance = userData?.wallet ?? 0;
+
+    bool isAvailable = dataPlans.any((e) => e.network == _selectedNetwork);
 
     return Scaffold(
       body: PageLoader(
@@ -150,35 +162,118 @@ class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
                 const VerticalSpacing(30),
                 DataCardNetworkSelection(
                   selectedNetwork: _selectedNetwork,
-                  dataPlans: dataPlans,
+                  dataPlans: dataPlanNetworks,
                   onNidSelected: _onNidSelected,
                   selectedNid: _selectedNid.toString(),
                   onNetworkSelected: (selectedCableProvider) =>
-                      _onDataProviderSelected(selectedCableProvider, dataPlans),
+                      _onDataProviderSelected(
+                    selectedCableProvider,
+                    dataPlans,
+                  ),
                 ),
-                const VerticalSpacing(20),
-                SelectPhoneNumberSection(
-                  phoneNumberController: _phoneNumberController,
-                ),
-                const VerticalSpacing(20),
-                DataCardPlansWidget(
-                  selectedNetwork: _selectedNetwork,
-                  selectedType: _selectedType,
-                  dataPlans: dataPlans,
-                  ontypeSelected: (selectedType) =>
-                      _onTypeSelected(selectedType, dataPlans),
-                ),
-                const VerticalSpacing(20),
+                if (_selectedNetwork != null && !isAvailable)
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'This service is not available at the moment.',
+                        style: context.textTheme.s12w700
+                            .copyWith(color: AppColors.red),
+                      )),
+                if (_selectedNetwork != null && isAvailable)
+                  Column(
+                    children: [
+                      const VerticalSpacing(20),
+                      DataCardPlanWidget(
+                        filteredPlans: filteredPlans,
+                        onPlanSelected: _onPlanSelected,
+                        selectedPlan: _selectedPlan,
+                        selectedNetwork: _selectedNetwork,
+                        selectedType: _selectedType,
+                        onDataIdSelected: _onDataIdSelected,
+                        selectedDataId: _selectedDataId,
+                        selectedPlanPrice: _selectedPlanPrice,
+                        onPlanPriceSelected: _onPlanPriceSelected,
+                      ),
+                      const VerticalSpacing(10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          // color: AppColors.white,
+                        ),
+                        child: DSFormfield(
+                          onChange: (value) {
+                            if (_selectedPlanPrice != null &&
+                                value.isNotEmpty) {
+                              setState(() {
+                                totalAmount =
+                                    (num.tryParse(_selectedPlanPrice!) ?? 0) *
+                                        (num.tryParse(value) ?? 1);
+                              });
+                            }
+                          },
+                          label: 'Quantity',
+                          controller: _quantityController,
+                          validateFunction: Validators.notEmpty(),
+                          hintText: 'Enter quantity',
+                          keyboardType: TextInputType.number,
+                          maxLength: 11,
+                          // prefixIcon: const Icon(Icons.phone),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Amount',
+                            style: context.textTheme.s12w700
+                                .copyWith(color: AppColors.primary1D1446),
+                          ),
+                          const VerticalSpacing(5),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                width: 1.5,
+                                color: AppColors.primary808080
+                                    .withValues(alpha: 0.15),
+                              ),
+                            ),
+                            child: Text('N$totalAmount'),
+                          ),
+                        ],
+                      ),
+                      const VerticalSpacing(20),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          // color: AppColors.white,
+                        ),
+                        child: DSFormfield(
+                          label: 'Name on card',
+                          controller: _nameOnCardController,
+                          validateFunction: Validators.notEmpty(),
+                          hintText: 'Enter name on card',
+                        ),
+                      ),
+                    ],
+                  ),
                 VerticalSpacing(60),
                 MapsDataSendButton(
                   isLoading: isLoading,
                   isEnabled: isEnabled(),
                   onTap: () {
-                    userBalance < num.parse(_selectedPlanPrice ?? '')
+                    userBalance < totalAmount
                         ? context.showError(message: 'Insuffienct funds')
                         : showPinBottomSheet();
                   },
-                  title: 'Buy Data',
+                  title: 'Proceed',
                 )
               ],
             ),
@@ -207,12 +302,14 @@ class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
   }
 
   void _buyData() {
-    final data = BuyDataRequest(
-        id: _selectedDataId.toString(),
-        pin: '1111',
-        number: _phoneNumberController.text.trim());
+    final data = BuyDataCardRequest(
+      id: _selectedDataId.toString(),
+      pin: _pinController.text.trim(),
+      quantity: _quantityController.text.trim(),
+      name: _nameOnCardController.text.trim(),
+    );
 
-    ref.read(buyDataNotifierProvider.notifier).buyData(
+    ref.read(buyDataCardNotifierProvider.notifier).buyDataCard(
           request: data,
           onSuccess: (message) {
             context.showSuccess(message: message);

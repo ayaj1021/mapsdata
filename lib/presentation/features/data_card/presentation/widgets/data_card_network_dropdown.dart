@@ -12,7 +12,7 @@ class DataCardNetworkSelection extends StatefulWidget {
       required this.onNidSelected,
       required this.selectedNid});
 
-  final List<DataCardsPlan> dataPlans;
+  final List<Network> dataPlans;
   String? selectedNetwork;
   String? selectedNid;
   final Function(String) onNetworkSelected;
@@ -25,7 +25,7 @@ class DataCardNetworkSelection extends StatefulWidget {
 class _DataCardNetworkSelectionState extends State<DataCardNetworkSelection> {
   @override
   Widget build(BuildContext context) {
-    final plans = widget.dataPlans.map((plan) => plan.network).toSet();
+    final plans = widget.dataPlans.map((plan) => plan.name).toSet();
     return CustomDropdown(
       value: widget.selectedNetwork,
       hintText: 'Select Network',
@@ -42,8 +42,8 @@ class _DataCardNetworkSelectionState extends State<DataCardNetworkSelection> {
           widget.selectedNetwork = value!;
 
           widget.selectedNid = widget.dataPlans
-              .firstWhere((network) => network.network == value)
-              .id;
+              .firstWhere((network) => network.name == value)
+              .name;
         });
         widget.onNetworkSelected(value!);
         widget.onNidSelected(widget.selectedNid.toString());

@@ -7,6 +7,8 @@ import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_request.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_response.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/fetch_airtime_list_model.dart';
+import 'package:mapsdata/presentation/features/data_card/data/model/buy_data_card_request.dart';
+import 'package:mapsdata/presentation/features/data_card/data/model/buy_data_card_response.dart';
 import 'package:mapsdata/presentation/features/data_card/data/model/get_data_cards_response.dart';
 import 'package:mapsdata/presentation/features/data_topup/data/model/buy_data_request.dart';
 import 'package:mapsdata/presentation/features/data_topup/data/model/buy_data_response.dart';
@@ -76,6 +78,11 @@ abstract class RestClient {
   @POST('/airtime/topup')
   Future<BuyAirtimeResponse> buyAirtime(
     @Body() BuyAirtimeRequest buyAirtimeRequest,
+  );
+
+  @POST('/data-card/purchase')
+  Future<BuyDataCardResponse> buyDataCard(
+    @Body() BuyDataCardRequest request,
   );
 }
 
