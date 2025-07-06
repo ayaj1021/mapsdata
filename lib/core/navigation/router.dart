@@ -4,6 +4,7 @@ import 'package:mapsdata/presentation/features/cables/presentation/view/cable_vi
 import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
+import 'package:mapsdata/presentation/features/electricity/presentation/view/electricity_view.dart';
 import 'package:mapsdata/presentation/features/fund_account/presentation/view/link_nin_bvn_view.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/forgot_password.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/login.dart';
@@ -32,6 +33,7 @@ class AppRouter {
     RechargeCardPrintingScreen.routeName: (context) =>
         const RechargeCardPrintingScreen(),
     BuyCableScreen.routeName: (context) => const BuyCableScreen(),
+    BuyElectricityScreen.routeName: (context) => const BuyElectricityScreen(),
   };
   static Map<String, Widget Function(BuildContext)> get routes => _routes;
 }

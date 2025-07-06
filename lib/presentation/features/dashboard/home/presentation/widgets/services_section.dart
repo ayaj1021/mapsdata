@@ -6,6 +6,7 @@ import 'package:mapsdata/presentation/features/cables/presentation/view/cable_vi
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/widgets/quick_action_tabs.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
+import 'package:mapsdata/presentation/features/electricity/presentation/view/electricity_view.dart';
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
 import 'package:mapsdata/presentation/features/recharge_card_printing/presentation/view/recharge_card_printing_view.dart';
 import 'package:mapsdata/presentation/features/result_checker/presentation/view/result_checker_view.dart';
@@ -18,7 +19,7 @@ class ServicesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final Uri whatsapp = Uri.parse('https://wa.me/+2348160788744');
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: AppColors.white,
@@ -77,6 +78,16 @@ class ServicesSection extends StatelessWidget {
                   onTap: () => context.pushNamed(DataCardScreen.routeName),
                   image: 'assets/svg/data_new.svg',
                   title: 'Data Card'),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              QuickActionTabs(
+                  onTap: () =>
+                      context.pushNamed(BuyElectricityScreen.routeName),
+                  image: 'assets/svg/electricity_new.svg',
+                  title: 'Electricity'),
             ],
           ),
         ],

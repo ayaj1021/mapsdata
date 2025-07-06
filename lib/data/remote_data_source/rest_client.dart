@@ -18,6 +18,11 @@ import 'package:mapsdata/presentation/features/data_card/data/model/get_data_car
 import 'package:mapsdata/presentation/features/data_topup/data/model/buy_data_request.dart';
 import 'package:mapsdata/presentation/features/data_topup/data/model/buy_data_response.dart';
 import 'package:mapsdata/presentation/features/data_topup/data/model/get_data_response_model.dart';
+import 'package:mapsdata/presentation/features/electricity/data/model/buy_electricity_request.dart';
+import 'package:mapsdata/presentation/features/electricity/data/model/buy_electricity_response.dart';
+import 'package:mapsdata/presentation/features/electricity/data/model/get_discos_response.dart';
+import 'package:mapsdata/presentation/features/electricity/data/model/validate_card_number_request.dart';
+import 'package:mapsdata/presentation/features/electricity/data/model/validate_card_number_response.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/link_bvn_nin_request.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/link_nin_bvn_response.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/virtual_account_response.dart';
@@ -63,6 +68,9 @@ abstract class RestClient {
   @POST('/cable/plans')
   Future<CablePlansResponse> getCablePlans();
 
+  @POST('/bills')
+  Future<GetDiscosResponse> getDiscos();
+
   @POST('/recharge-pin')
   Future<RechargeCardPrintingResponse> getRechargeCardPrinting();
 
@@ -103,9 +111,19 @@ abstract class RestClient {
     @Body() ValidateCableNumberRequest request,
   );
 
+  @POST('/bills/validate')
+  Future<ValidateCardNumberResponse> validateCardNumber(
+    @Body() ValidateCardNumberRequest request,
+  );
+
   @POST('/cable/subscription')
   Future<BuyCableResponse> buyCable(
     @Body() BuyCableRequest request,
+  );
+
+  @POST('/bills/payment')
+  Future<BuyElectricityResponse> buyElectricity(
+    @Body() BuyElectricityRequest request,
   );
 
   @POST('/recharge-pin/purchase')
@@ -127,9 +145,6 @@ ProviderFamily<Dio, BaseEnv> _dio = Provider.family<Dio, BaseEnv>(
       HeaderInterCeptor(
         dio: dio,
         secureStorage: ref.read(localStorageProvider),
-        // onTokenExpired: () {
-        //ref.read(logoutProvider.notifier).state = ActivityStatus.loggedOut;
-        // },
       ),
     );
     return dio;
