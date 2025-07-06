@@ -7,6 +7,9 @@ import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_request.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_response.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/fetch_airtime_list_model.dart';
+import 'package:mapsdata/presentation/features/cables/data/model/get_cable_plans_model.dart';
+import 'package:mapsdata/presentation/features/cables/data/model/validate_cable_number_request.dart';
+import 'package:mapsdata/presentation/features/cables/data/model/validate_cable_number_response.dart';
 import 'package:mapsdata/presentation/features/data_card/data/model/buy_data_card_request.dart';
 import 'package:mapsdata/presentation/features/data_card/data/model/buy_data_card_response.dart';
 import 'package:mapsdata/presentation/features/data_card/data/model/get_data_cards_response.dart';
@@ -19,6 +22,8 @@ import 'package:mapsdata/presentation/features/fund_account/data/model/virtual_a
 import 'package:mapsdata/presentation/features/login/data/models/login_request.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_response.dart';
 import 'package:mapsdata/presentation/features/notification/data/model/get_notification_response.dart';
+import 'package:mapsdata/presentation/features/recharge_card_printing/data/model/get_recharge_printing_response.dart';
+import 'package:mapsdata/presentation/features/recharge_card_printing/data/model/recharge_card_printing_request.dart';
 import 'package:mapsdata/presentation/features/register/data/models/sign_up_request.dart';
 import 'package:mapsdata/presentation/features/register/data/models/sign_up_response.dart';
 import 'package:mapsdata/presentation/features/result_checker/data/model/buy_exam_request.dart';
@@ -53,6 +58,12 @@ abstract class RestClient {
   @POST('/data-card/plans')
   Future<DataCardsResponse> getDataCards();
 
+  @POST('/cable/plans')
+  Future<CablePlansResponse> getCablePlans();
+
+  @POST('/recharge-pin')
+  Future<RechargeCardPrintingResponse> getRechargeCardPrinting();
+
   @POST('/airtime')
   Future<GetAirtimePlansResponse> getAirtimePlansDetails();
 
@@ -83,6 +94,16 @@ abstract class RestClient {
   @POST('/data-card/purchase')
   Future<BuyDataCardResponse> buyDataCard(
     @Body() BuyDataCardRequest request,
+  );
+
+  @POST('/cable/validate')
+  Future<ValidateCableNumberResponse> validateCableNumber(
+    @Body() ValidateCableNumberRequest request,
+  );
+
+  @POST('/recharge-pin/purchase')
+  Future<RechargeCardPrintingResponse> rechargeCardPrinting(
+    @Body() RechargeCardPrintingRequest request,
   );
 }
 

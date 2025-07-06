@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mapsdata/core/extensions/build_context_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
+import 'package:mapsdata/presentation/features/cables/presentation/view/cable_view.dart';
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/widgets/quick_action_tabs.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
+import 'package:mapsdata/presentation/features/recharge_card_printing/presentation/view/recharge_card_printing_view.dart';
 import 'package:mapsdata/presentation/features/result_checker/presentation/view/result_checker_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -47,7 +49,9 @@ class ServicesSection extends StatelessWidget {
               const QuickActionTabs(
                   image: 'assets/svg/airtime_new.svg',
                   title: 'Airtime to Cash'),
-              const QuickActionTabs(
+              QuickActionTabs(
+                  onTap: () =>
+                      context.pushNamed(RechargeCardPrintingScreen.routeName),
                   image: 'assets/svg/electricity_new.svg',
                   title: 'Recharge card'),
               QuickActionTabs(
@@ -66,7 +70,9 @@ class ServicesSection extends StatelessWidget {
                   image: 'assets/svg/education_new.svg',
                   title: 'Result Checker'),
               QuickActionTabs(
-                  image: 'assets/svg/cable_new.svg', title: 'Cable'),
+                  onTap: () => context.pushNamed(BuyCableScreen.routeName),
+                  image: 'assets/svg/cable_new.svg',
+                  title: 'Cable'),
               QuickActionTabs(
                   onTap: () => context.pushNamed(DataCardScreen.routeName),
                   image: 'assets/svg/data_new.svg',

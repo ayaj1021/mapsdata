@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
+import 'package:mapsdata/presentation/features/cables/presentation/view/cable_view.dart';
 import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
@@ -8,6 +9,7 @@ import 'package:mapsdata/presentation/features/login/presentation/view/forgot_pa
 import 'package:mapsdata/presentation/features/login/presentation/view/login.dart';
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
 import 'package:mapsdata/presentation/features/onboarding/presentation/view/onboarding_view.dart';
+import 'package:mapsdata/presentation/features/recharge_card_printing/presentation/view/recharge_card_printing_view.dart';
 import 'package:mapsdata/presentation/features/register/presentation/view/register.dart';
 import 'package:mapsdata/presentation/features/result_checker/presentation/view/result_checker_view.dart';
 import 'package:mapsdata/presentation/general_widgets/splash_screen.dart';
@@ -27,6 +29,9 @@ class AppRouter {
     LinkNinBvnView.routeName: (context) => const LinkNinBvnView(),
     ResultCheckerScreen.routeName: (context) => const ResultCheckerScreen(),
     DataCardScreen.routeName: (context) => const DataCardScreen(),
+    RechargeCardPrintingScreen.routeName: (context) =>
+        const RechargeCardPrintingScreen(),
+    BuyCableScreen.routeName: (context) => const BuyCableScreen(),
   };
   static Map<String, Widget Function(BuildContext)> get routes => _routes;
 }

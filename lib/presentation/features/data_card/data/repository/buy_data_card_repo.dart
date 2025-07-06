@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/config/base_response/base_response.dart';
@@ -16,7 +14,6 @@ class BuyDataCardRepository {
       BuyDataCardRequest request) async {
     try {
       final res = await _restClient.buyDataCard(request);
-      log('This is response ${res.message}');
 
       return BaseResponse(
           status: res.status.toString(), data: res, message: res.message);
