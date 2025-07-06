@@ -6,14 +6,14 @@ import 'package:mapsdata/core/utils/enums.dart';
 import 'package:mapsdata/core/utils/page_loader.dart';
 import 'package:mapsdata/core/utils/validators.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/airtime_topup_header_section.dart';
+import 'package:mapsdata/presentation/features/cables/data/model/buy_cable_request.dart';
 import 'package:mapsdata/presentation/features/cables/data/model/get_cable_plans_model.dart';
 import 'package:mapsdata/presentation/features/cables/data/model/validate_cable_number_request.dart';
+import 'package:mapsdata/presentation/features/cables/presentation/notifier/buy_cable_notifier.dart';
 import 'package:mapsdata/presentation/features/cables/presentation/notifier/get_cable_plans_notifier.dart';
 import 'package:mapsdata/presentation/features/cables/presentation/notifier/validate_cable_number_notifier.dart';
 import 'package:mapsdata/presentation/features/cables/presentation/widgets/cable_newwork_drop_down.dart';
 import 'package:mapsdata/presentation/features/cables/presentation/widgets/cable_plans_widget.dart';
-import 'package:mapsdata/presentation/features/data_card/data/model/buy_data_card_request.dart';
-import 'package:mapsdata/presentation/features/data_card/presentation/notifier/buy_data_card_notifier.dart';
 import 'package:mapsdata/presentation/features/notification/notifier/get_notification_notifier.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_form_field.dart';
@@ -137,7 +137,7 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(
-        buyDataCardNotifierProvider.select((state) => state.state.isLoading));
+        buyCableNotifierProvider.select((state) => state.state.isLoading));
     final dataPlans = ref.watch(getCablePlansNotifierProvider
         .select((v) => v.data?.plans?.toList() ?? []));
 
@@ -149,6 +149,9 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
     final userBalance = userData?.wallet ?? 0;
     final cardNumber = ref
         .watch(validateCableNumberNotifierProvider.select((v) => v.data?.name));
+
+    final isCardNumberLoading = ref.watch(
+        validateCableNumberNotifierProvider.select((v) => v.state.isLoading));
 
     return Scaffold(
       body: PageLoader(
@@ -208,8 +211,6 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
                               });
                             }
 
-                            //8217023300
-
                             final data = ValidateCableNumberRequest(
                               cardNumber: _cardNumberController.text.trim(),
                               id: _selectedNid.toString(),
@@ -234,10 +235,12 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
                           hintText: 'Enter iuc number',
                           keyboardType: TextInputType.number,
                           maxLength: 11,
-                          // prefixIcon: const Icon(Icons.phone),
                         ),
                       ),
-
+                      if (isCardNumberLoading)
+                        Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
                       if (cardNumber != null)
                         Container(
                           width: double.infinity,
@@ -253,19 +256,19 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
                           ),
                           child: Text(cardNumber),
                         ),
-                      //  const VerticalSpacing(20),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 15),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          // color: AppColors.white,
                         ),
                         child: DSFormfield(
                           label: 'Phone number',
                           controller: _phoneNumberController,
                           validateFunction: Validators.notEmpty(),
                           hintText: 'Enter phone number',
+                          keyboardType: TextInputType.phone,
+                          maxLength: 11,
                         ),
                       ),
                     ],
@@ -303,7 +306,7 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
           controller: _pinController,
           onTap: () {
             if (_pinController.text.length == 4) {
-              _buyData();
+              _buyCable();
             }
           },
         ));
@@ -311,15 +314,15 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
     );
   }
 
-  void _buyData() {
-    final data = BuyDataCardRequest(
+  void _buyCable() {
+    final data = BuyCableRequest(
       id: _selectedDataId.toString(),
       pin: _pinController.text.trim(),
-      quantity: _cardNumberController.text.trim(),
-      name: _phoneNumberController.text.trim(),
+      cardNumber: _cardNumberController.text.trim(),
+      number: _phoneNumberController.text.trim(),
     );
 
-    ref.read(buyDataCardNotifierProvider.notifier).buyDataCard(
+    ref.read(buyCableNotifierProvider.notifier).buyCable(
           request: data,
           onSuccess: (message) {
             context.showSuccess(message: message);

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/config/base_response/base_response.dart';
@@ -16,7 +14,6 @@ class ValidateCableNumberRepository {
       ValidateCableNumberRequest request) async {
     try {
       final res = await _restClient.validateCableNumber(request);
-      log('This is res ${res.name}');
 
       return BaseResponse(
           status: res.status.toString(), data: res, message: res.name);

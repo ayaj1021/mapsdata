@@ -7,6 +7,8 @@ import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_request.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_response.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/fetch_airtime_list_model.dart';
+import 'package:mapsdata/presentation/features/cables/data/model/buy_cable_request.dart';
+import 'package:mapsdata/presentation/features/cables/data/model/buy_cable_response.dart';
 import 'package:mapsdata/presentation/features/cables/data/model/get_cable_plans_model.dart';
 import 'package:mapsdata/presentation/features/cables/data/model/validate_cable_number_request.dart';
 import 'package:mapsdata/presentation/features/cables/data/model/validate_cable_number_response.dart';
@@ -99,6 +101,11 @@ abstract class RestClient {
   @POST('/cable/validate')
   Future<ValidateCableNumberResponse> validateCableNumber(
     @Body() ValidateCableNumberRequest request,
+  );
+
+  @POST('/cable/subscription')
+  Future<BuyCableResponse> buyCable(
+    @Body() BuyCableRequest request,
   );
 
   @POST('/recharge-pin/purchase')
