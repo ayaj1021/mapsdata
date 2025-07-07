@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mapsdata/core/extensions/build_context_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
+import 'package:mapsdata/presentation/features/bulk_sms/presentation/view/bulk_sms_view.dart';
 import 'package:mapsdata/presentation/features/cables/presentation/view/cable_view.dart';
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/widgets/quick_action_tabs.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
@@ -47,9 +48,10 @@ class ServicesSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const QuickActionTabs(
+              QuickActionTabs(
+                  onTap: () => context.pushNamed(BulkSms.routeName),
                   image: 'assets/svg/airtime_new.svg',
-                  title: 'Airtime to Cash'),
+                  title: 'Bulk Sms'),
               QuickActionTabs(
                   onTap: () =>
                       context.pushNamed(RechargeCardPrintingScreen.routeName),

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_topup_screen.dart';
+import 'package:mapsdata/presentation/features/bulk_sms/presentation/view/bulk_sms_view.dart';
 import 'package:mapsdata/presentation/features/cables/presentation/view/cable_view.dart';
 import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
@@ -34,6 +35,7 @@ class AppRouter {
         const RechargeCardPrintingScreen(),
     BuyCableScreen.routeName: (context) => const BuyCableScreen(),
     BuyElectricityScreen.routeName: (context) => const BuyElectricityScreen(),
+    BulkSms.routeName: (context) => const BulkSms(),
   };
   static Map<String, Widget Function(BuildContext)> get routes => _routes;
 }

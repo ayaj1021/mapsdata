@@ -7,6 +7,8 @@ import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_request.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airtime_response.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/fetch_airtime_list_model.dart';
+import 'package:mapsdata/presentation/features/bulk_sms/data/model/bulk_sms_request.dart';
+import 'package:mapsdata/presentation/features/bulk_sms/data/model/bulk_sms_response.dart';
 import 'package:mapsdata/presentation/features/cables/data/model/buy_cable_request.dart';
 import 'package:mapsdata/presentation/features/cables/data/model/buy_cable_response.dart';
 import 'package:mapsdata/presentation/features/cables/data/model/get_cable_plans_model.dart';
@@ -124,6 +126,11 @@ abstract class RestClient {
   @POST('/bills/payment')
   Future<BuyElectricityResponse> buyElectricity(
     @Body() BuyElectricityRequest request,
+  );
+
+  @POST('/bulk-sms/send')
+  Future<BulkSmsResponse> bulkSms(
+    @Body() BulkSmsRequest request,
   );
 
   @POST('/recharge-pin/purchase')
