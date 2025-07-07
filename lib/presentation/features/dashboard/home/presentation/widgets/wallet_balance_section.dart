@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
+import 'package:mapsdata/presentation/features/dashboard/history/presentation/view/history.dart';
 import 'package:mapsdata/presentation/features/fund_account/presentation/view/fund_account_options.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
@@ -53,10 +54,20 @@ class WalletBalanceSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                'Transaction history',
-                style:
-                    context.textTheme.s12w400.copyWith(color: AppColors.white),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TransactionHistory(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Transaction history',
+                  style: context.textTheme.s12w400
+                      .copyWith(color: AppColors.white),
+                ),
               ),
               const VerticalSpacing(30),
               GestureDetector(

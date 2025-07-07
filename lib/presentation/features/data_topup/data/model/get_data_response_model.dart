@@ -6,7 +6,7 @@ class GetDataPlansResponse {
   final List<Prefix>? prefix;
   final List<Network>? networks;
   final List<dynamic>? beneficiaries;
-  final int? balance;
+  final num? balance;
   final bool? pin;
 
   GetDataPlansResponse({
@@ -36,7 +36,7 @@ class GetDataPlansResponse {
           ?.map((e) => Network.fromJson(e as Map<String, dynamic>))
           .toList(),
       beneficiaries: json['beneficiaries'] as List<dynamic>?,
-      balance: json['balance'] as int?,
+      balance: json['balance'] as num?,
       pin: json['pin'] as bool?,
     );
   }

@@ -1,68 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:mapsdata/core/extensions/text_theme_extension.dart';
-import 'package:mapsdata/core/theme/app_colors.dart';
-import 'package:mapsdata/presentation/general_widgets/spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mapsdata/core/utils/enums.dart';
+import 'package:mapsdata/presentation/features/transactions/presentation/notifier/get_transactions_notifer.dart';
 
-class TransactionHistoryWidget extends StatelessWidget {
-  const TransactionHistoryWidget({
-    super.key,
-  });
+class TransactionHistoryList extends ConsumerWidget {
+  final ScrollController scrollController;
+  const TransactionHistoryList({super.key, required this.scrollController});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                const CircleAvatar(
-                  radius: 25,
-                  backgroundColor: AppColors.primaryDEEDF7,
-                  child: Icon(Icons.call_outlined),
-                ),
-                const HorizontalSpacing(10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Airtime',
-                      style: context.textTheme.s14w500.copyWith(
-                        color: AppColors.primary1A1A1A,
-                      ),
-                    ),
-                    Text(
-                      'Apr 18th, 20:59',
-                      style: context.textTheme.s12w400.copyWith(
-                        color: AppColors.primary475569,
-                      ),
-                    )
-                  ],
-                ),
-              ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(getTransactionsNotifer);
+    final stateLoading = state.state.isLoading;
+
+    if (stateLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final dataList = state.data?.data ?? [];
+
+    if (dataList.isEmpty) {
+      return const Center(child: Text("No transactions found."));
+    }
+
+    return ListView.separated(
+      controller: scrollController,
+      itemCount: dataList.length + 1,
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        if (index < dataList.length) {
+          final tx = dataList[index];
+          return ListTile(
+            leading: Icon(
+              tx.type == "Credit" ? Icons.arrow_downward : Icons.arrow_upward,
+              color: tx.type == "Credit" ? Colors.green : Colors.red,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '-₦35,000.00',
-                  style: context.textTheme.s14w500.copyWith(
-                    color: AppColors.primary1A1A1A,
-                  ),
-                ),
-                Text(
-                  'Successful',
-                  style: context.textTheme.s12w400.copyWith(
-                    color: AppColors.green,
-                  ),
+            title: Text(tx.description ?? 'No description'),
+            subtitle: Text(tx.date ?? ''),
+            trailing: Text("₦${tx.amount ?? '0'}"),
+          );
+        } else {
+          final hasMore = ref.read(getTransactionsNotifer.notifier).hasMore;
+          return hasMore
+              ? const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
                 )
-              ],
-            )
-          ],
-        ),
-        const VerticalSpacing(15)
-      ],
+              : const SizedBox(); // Empty container if no more
+        }
+      },
     );
   }
 }

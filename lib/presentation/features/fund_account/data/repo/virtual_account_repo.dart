@@ -12,7 +12,6 @@ class VirtualAccountRepository {
   Future<BaseResponse<VirtualAccountResponse>> virtualAccount() async {
     try {
       final response = await _restClient.virtualAccount();
-      //  return BaseResponse(status: 'success', data: response);
 
       return BaseResponse(
           status: response.status.toString(),

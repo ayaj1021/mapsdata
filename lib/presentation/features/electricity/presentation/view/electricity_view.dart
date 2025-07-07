@@ -119,6 +119,8 @@ class _BuyCableScreenState extends ConsumerState<BuyElectricityScreen> {
         .select((state) => state.state.isLoading));
     final dataPlans = ref.watch(
         getDiscosNotifierProvider.select((v) => v.data?.bills?.toList() ?? []));
+    final isDataPlansLoading =
+        ref.watch(getDiscosNotifierProvider.select((v) => v.state.isLoading));
 
     final dataPlanNetworks = ref.watch(
         getDiscosNotifierProvider.select((v) => v.data?.bills?.toList() ?? []));
@@ -134,152 +136,158 @@ class _BuyCableScreenState extends ConsumerState<BuyElectricityScreen> {
 
     return Scaffold(
       body: PageLoader(
-        isLoading: isLoading,
-        child: SafeArea(
-            child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                const CustomAppHeaderSection(
-                  title: 'Buy Cable',
-                ),
-                const VerticalSpacing(30),
-                DiscoNetworkSelection(
-                  selectedNetwork: _selectedNetwork,
-                  dataPlans: dataPlanNetworks,
-                  onNidSelected: _onNidSelected,
-                  selectedNid: _selectedNid.toString(),
-                  onNetworkSelected: (selectedCableProvider) =>
-                      _onDataProviderSelected(
-                    selectedCableProvider,
-                    dataPlans,
+        isLoading: isDataPlansLoading,
+        child: PageLoader(
+          isLoading: isLoading,
+          child: SafeArea(
+              child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  const CustomAppHeaderSection(
+                    title: 'Buy Cable',
                   ),
-                ),
-                if (_selectedNetwork != null)
-                  Column(
-                    children: [
-                      const VerticalSpacing(20),
-                      DiscoPlanWidget(
-                        filteredPlans: filteredPlans,
-                        onPlanSelected: _onPlanSelected,
-                        selectedPlan: _selectedPlan,
-                      ),
-                      const VerticalSpacing(20),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 1),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          // color: AppColors.white,
+                  const VerticalSpacing(30),
+                  DiscoNetworkSelection(
+                    selectedNetwork: _selectedNetwork,
+                    dataPlans: dataPlanNetworks,
+                    onNidSelected: _onNidSelected,
+                    selectedNid: _selectedNid.toString(),
+                    onNetworkSelected: (selectedCableProvider) =>
+                        _onDataProviderSelected(
+                      selectedCableProvider,
+                      dataPlans,
+                    ),
+                  ),
+                  if (_selectedNetwork != null)
+                    Column(
+                      children: [
+                        const VerticalSpacing(20),
+                        DiscoPlanWidget(
+                          filteredPlans: filteredPlans,
+                          onPlanSelected: _onPlanSelected,
+                          selectedPlan: _selectedPlan,
                         ),
-                        child: DSFormfield(
-                          onChange: (value) {
-                            if (_selectedPlanPrice != null &&
-                                value.isNotEmpty) {
-                              setState(() {
-                                totalAmount =
-                                    (num.tryParse(_selectedPlanPrice!) ?? 0) *
-                                        (num.tryParse(value) ?? 1);
-                              });
-                            }
-
-                            final data = ValidateCardNumberRequest(
-                                meterNumber: _meterNumberController.text.trim(),
-                                id: _selectedNid.toString(),
-                                type: _selectedPlan?.toUpperCase().toString() ??
-                                    '');
-                            if (value.isNotEmpty && value.length >= 10) {
-                              ref
-                                  .read(validateCardNumberNotifierProvider
-                                      .notifier)
-                                  .validateCardNumber(
-                                      request: data,
-                                      onError: (error) {
-                                        context.showError(message: error);
-                                      },
-                                      onSuccess: (message) {
-                                        context.showSuccess(message: message);
-                                      });
-                            }
-                          },
-                          label: 'Meter Number',
-                          controller: _meterNumberController,
-                          validateFunction: Validators.notEmpty(),
-                          hintText: 'Enter meter number',
-                          keyboardType: TextInputType.number,
-                          maxLength: 11,
-                        ),
-                      ),
-                      if (isCardNumberLoading)
-                        Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                      if (cardNumber != null)
+                        const VerticalSpacing(20),
                         Container(
-                          width: double.infinity,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
+                              horizontal: 10, vertical: 1),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              width: 1.5,
-                              color: AppColors.primary808080
-                                  .withValues(alpha: 0.15),
-                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            // color: AppColors.white,
                           ),
-                          child: Text(cardNumber),
+                          child: DSFormfield(
+                            onChange: (value) {
+                              if (_selectedPlanPrice != null &&
+                                  value.isNotEmpty) {
+                                setState(() {
+                                  totalAmount =
+                                      (num.tryParse(_selectedPlanPrice!) ?? 0) *
+                                          (num.tryParse(value) ?? 1);
+                                });
+                              }
+
+                              final data = ValidateCardNumberRequest(
+                                  meterNumber:
+                                      _meterNumberController.text.trim(),
+                                  id: _selectedNid.toString(),
+                                  type:
+                                      _selectedPlan?.toUpperCase().toString() ??
+                                          '');
+                              if (value.isNotEmpty && value.length >= 10) {
+                                ref
+                                    .read(validateCardNumberNotifierProvider
+                                        .notifier)
+                                    .validateCardNumber(
+                                        request: data,
+                                        onError: (error) {
+                                          context.showError(message: error);
+                                        },
+                                        onSuccess: (message) {
+                                          context.showSuccess(message: message);
+                                        });
+                              }
+                            },
+                            label: 'Meter Number',
+                            controller: _meterNumberController,
+                            validateFunction: Validators.notEmpty(),
+                            hintText: 'Enter meter number',
+                            keyboardType: TextInputType.number,
+                            maxLength: 11,
+                          ),
                         ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
+                        if (isCardNumberLoading)
+                          Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                        if (cardNumber != null)
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                width: 1.5,
+                                color: AppColors.primary808080
+                                    .withValues(alpha: 0.15),
+                              ),
+                            ),
+                            child: Text(cardNumber),
+                          ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: DSFormfield(
+                            label: 'Amount',
+                            controller: _amountController,
+                            validateFunction: Validators.notEmpty(),
+                            hintText: 'Enter amount',
+                            keyboardType: TextInputType.number,
+                          ),
                         ),
-                        child: DSFormfield(
-                          label: 'Amount',
-                          controller: _amountController,
-                          validateFunction: Validators.notEmpty(),
-                          hintText: 'Enter amount',
-                          keyboardType: TextInputType.number,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: DSFormfield(
+                            label: 'Phone number',
+                            controller: _phoneNumberController,
+                            validateFunction: Validators.notEmpty(),
+                            hintText: 'Enter phone number',
+                            keyboardType: TextInputType.phone,
+                            maxLength: 11,
+                          ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: DSFormfield(
-                          label: 'Phone number',
-                          controller: _phoneNumberController,
-                          validateFunction: Validators.notEmpty(),
-                          hintText: 'Enter phone number',
-                          keyboardType: TextInputType.phone,
-                          maxLength: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                VerticalSpacing(60),
-                ValueListenableBuilder(
-                    valueListenable: _isEnabled,
-                    builder: (context, r, c) {
-                      return MapsDataSendButton(
-                        isLoading: isLoading,
-                        isEnabled: r,
-                        onTap: () {
-                          userBalance < totalAmount
-                              ? context.showError(message: 'Insuffienct funds')
-                              : showPinBottomSheet();
-                        },
-                        title: 'Proceed',
-                      );
-                    })
-              ],
+                      ],
+                    ),
+                  VerticalSpacing(60),
+                  ValueListenableBuilder(
+                      valueListenable: _isEnabled,
+                      builder: (context, r, c) {
+                        return MapsDataSendButton(
+                          //  isLoading: isLoading,
+                          isEnabled: r,
+                          onTap: () {
+                            userBalance < totalAmount
+                                ? context.showError(
+                                    message: 'Insuffienct funds')
+                                : showPinBottomSheet();
+                          },
+                          title: 'Proceed',
+                        );
+                      })
+                ],
+              ),
             ),
-          ),
-        )),
+          )),
+        ),
       ),
     );
   }

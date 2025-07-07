@@ -139,6 +139,8 @@ class _RechargeCardPrintingScreenState
         .select((state) => state.state.isLoading));
     final dataPlans = ref.watch(getRechargeCardPrintingNotifierProvider
         .select((v) => v.data?.range?.toList() ?? []));
+    final isDataPlansLoading = ref.watch(getRechargeCardPrintingNotifierProvider
+        .select((v) => v.state.isLoading));
 
     final dataPlanNetworks = ref.watch(getRechargeCardPrintingNotifierProvider
         .select((v) => v.data?.recharge?.toList() ?? []));
@@ -149,128 +151,131 @@ class _RechargeCardPrintingScreenState
 
     return Scaffold(
       body: PageLoader(
-        isLoading: isLoading,
-        child: SafeArea(
-            child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                const CustomAppHeaderSection(
-                  title: 'Recharge Card Printing',
-                ),
-                const VerticalSpacing(30),
-                RechargeCardPrintingNetworkSelection(
-                  selectedNetwork: _selectedNetwork,
-                  dataPlans: dataPlanNetworks,
-                  onNidSelected: _onNidSelected,
-                  selectedNid: _selectedNid.toString(),
-                  onNetworkSelected: (selectedCableProvider) =>
-                      _onDataProviderSelected(
-                    selectedCableProvider,
-                    dataPlans,
+        isLoading: isDataPlansLoading,
+        child: PageLoader(
+          isLoading: isLoading,
+          child: SafeArea(
+              child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  const CustomAppHeaderSection(
+                    title: 'Recharge Card Printing',
                   ),
-                ),
-                if (_selectedNetwork != null)
-                  Column(
-                    children: [
-                      const VerticalSpacing(20),
-                      RechargeCardPrintingPlanWidget(
-                        filteredPlans: filteredPlans,
-                        onPlanSelected: _onPlanSelected,
-                        selectedPlan: _selectedPlan,
-                        selectedNetwork: _selectedNetwork,
-                        selectedType: _selectedType,
-                        onDataIdSelected: _onDataIdSelected,
-                        selectedDataId: _selectedDataId,
-                        selectedPlanPrice: _selectedPlanPrice,
-                        onPlanPriceSelected: _onPlanPriceSelected,
-                      ),
-                      const VerticalSpacing(10),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          // color: AppColors.white,
+                  const VerticalSpacing(30),
+                  RechargeCardPrintingNetworkSelection(
+                    selectedNetwork: _selectedNetwork,
+                    dataPlans: dataPlanNetworks,
+                    onNidSelected: _onNidSelected,
+                    selectedNid: _selectedNid.toString(),
+                    onNetworkSelected: (selectedCableProvider) =>
+                        _onDataProviderSelected(
+                      selectedCableProvider,
+                      dataPlans,
+                    ),
+                  ),
+                  if (_selectedNetwork != null)
+                    Column(
+                      children: [
+                        const VerticalSpacing(20),
+                        RechargeCardPrintingPlanWidget(
+                          filteredPlans: filteredPlans,
+                          onPlanSelected: _onPlanSelected,
+                          selectedPlan: _selectedPlan,
+                          selectedNetwork: _selectedNetwork,
+                          selectedType: _selectedType,
+                          onDataIdSelected: _onDataIdSelected,
+                          selectedDataId: _selectedDataId,
+                          selectedPlanPrice: _selectedPlanPrice,
+                          onPlanPriceSelected: _onPlanPriceSelected,
                         ),
-                        child: DSFormfield(
-                          onChange: (value) {
-                            if (_selectedPlanPrice != null &&
-                                value.isNotEmpty) {
-                              setState(() {
-                                totalAmount =
-                                    (num.tryParse(_selectedPlanPrice!) ?? 0) *
-                                        (num.tryParse(value) ?? 1);
-                              });
-                            }
-                          },
-                          label: 'Quantity',
-                          controller: _quantityController,
-                          validateFunction: Validators.notEmpty(),
-                          hintText: 'Enter quantity',
-                          keyboardType: TextInputType.number,
-                          maxLength: 11,
-                          // prefixIcon: const Icon(Icons.phone),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Amount',
-                            style: context.textTheme.s12w700
-                                .copyWith(color: AppColors.primary1D1446),
+                        const VerticalSpacing(10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            // color: AppColors.white,
                           ),
-                          const VerticalSpacing(5),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                width: 1.5,
-                                color: AppColors.primary808080
-                                    .withValues(alpha: 0.15),
-                              ),
+                          child: DSFormfield(
+                            onChange: (value) {
+                              if (_selectedPlanPrice != null &&
+                                  value.isNotEmpty) {
+                                setState(() {
+                                  totalAmount =
+                                      (num.tryParse(_selectedPlanPrice!) ?? 0) *
+                                          (num.tryParse(value) ?? 1);
+                                });
+                              }
+                            },
+                            label: 'Quantity',
+                            controller: _quantityController,
+                            validateFunction: Validators.notEmpty(),
+                            hintText: 'Enter quantity',
+                            keyboardType: TextInputType.number,
+                            maxLength: 11,
+                            // prefixIcon: const Icon(Icons.phone),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Amount',
+                              style: context.textTheme.s12w700
+                                  .copyWith(color: AppColors.primary1D1446),
                             ),
-                            child: Text('N$totalAmount'),
+                            const VerticalSpacing(5),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  width: 1.5,
+                                  color: AppColors.primary808080
+                                      .withValues(alpha: 0.15),
+                                ),
+                              ),
+                              child: Text('N$totalAmount'),
+                            ),
+                          ],
+                        ),
+                        const VerticalSpacing(20),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            // color: AppColors.white,
                           ),
-                        ],
-                      ),
-                      const VerticalSpacing(20),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          // color: AppColors.white,
+                          child: DSFormfield(
+                            label: 'Name on card',
+                            controller: _nameOnCardController,
+                            validateFunction: Validators.notEmpty(),
+                            hintText: 'Enter name on card',
+                          ),
                         ),
-                        child: DSFormfield(
-                          label: 'Name on card',
-                          controller: _nameOnCardController,
-                          validateFunction: Validators.notEmpty(),
-                          hintText: 'Enter name on card',
-                        ),
-                      ),
-                    ],
-                  ),
-                VerticalSpacing(60),
-                MapsDataSendButton(
-                  isLoading: isLoading,
-                  isEnabled: isEnabled(),
-                  onTap: () {
-                    userBalance < totalAmount
-                        ? context.showError(message: 'Insuffienct funds')
-                        : showPinBottomSheet();
-                  },
-                  title: 'Proceed',
-                )
-              ],
+                      ],
+                    ),
+                  VerticalSpacing(60),
+                  MapsDataSendButton(
+                    //  isLoading: isLoading,
+                    isEnabled: isEnabled(),
+                    onTap: () {
+                      userBalance < totalAmount
+                          ? context.showError(message: 'Insuffienct funds')
+                          : showPinBottomSheet();
+                    },
+                    title: 'Proceed',
+                  )
+                ],
+              ),
             ),
-          ),
-        )),
+          )),
+        ),
       ),
     );
   }

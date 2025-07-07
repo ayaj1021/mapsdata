@@ -84,6 +84,9 @@ class _AirtimeTopupScreenState extends ConsumerState<AirtimeTopupScreen> {
   Widget build(BuildContext context) {
     final airtimePlans = ref.watch(getAirtimePlansNotifierProvider
         .select((v) => v.data?.airtime?.toList() ?? []));
+
+    final isAirtimePlansLoading = ref.watch(
+        getAirtimePlansNotifierProvider.select((v) => v.state.isLoading));
     final isLoading = ref.watch(
       buyAirtimeNotifierProvider.select((v) => v.state.isLoading),
     );
@@ -93,52 +96,55 @@ class _AirtimeTopupScreenState extends ConsumerState<AirtimeTopupScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: PageLoader(
-        isLoading: isLoading,
-        child: SafeArea(
-            child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const CustomAppHeaderSection(
-                title: 'Airtime Topup',
-              ),
-              const VerticalSpacing(30),
-              AirtimeNetworkSelection(
-                selectedNetwork: _selectedNetwork,
-                airtimePlans: airtimePlans,
-                onNidSelected: _onNidSelected,
-                selectedNid: _selectedNid.toString(),
-                onNetworkSelected: (selectedCableProvider) =>
-                    _onDataProviderSelected(
-                        selectedCableProvider, airtimePlans),
-              ),
-              const VerticalSpacing(30),
-              SelectPhoneNumberSection(
-                phoneNumberController: _phoneNumberController,
-              ),
-              const VerticalSpacing(20),
-              EnterAirtimeAmountSection(
-                amountController: _airtimeAmountController,
-              ),
-              const VerticalSpacing(40),
-              ValueListenableBuilder(
-                valueListenable: _isBuyAirtimeEnabled,
-                builder: (context, r, c) {
-                  return MapsDataSendButton(
-                    isLoading: isLoading,
-                    isEnabled: r && !isLoading,
-                    onTap: () {
-                      userBalance < num.parse(_airtimeAmountController.text)
-                          ? context.showError(message: 'Insuffienct funds')
-                          : showPinBottomSheet();
-                    },
-                    title: 'Proceed',
-                  );
-                },
-              )
-            ],
-          ),
-        )),
+        isLoading: isAirtimePlansLoading,
+        child: PageLoader(
+          isLoading: isLoading,
+          child: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const CustomAppHeaderSection(
+                  title: 'Airtime Topup',
+                ),
+                const VerticalSpacing(30),
+                AirtimeNetworkSelection(
+                  selectedNetwork: _selectedNetwork,
+                  airtimePlans: airtimePlans,
+                  onNidSelected: _onNidSelected,
+                  selectedNid: _selectedNid.toString(),
+                  onNetworkSelected: (selectedCableProvider) =>
+                      _onDataProviderSelected(
+                          selectedCableProvider, airtimePlans),
+                ),
+                const VerticalSpacing(30),
+                SelectPhoneNumberSection(
+                  phoneNumberController: _phoneNumberController,
+                ),
+                const VerticalSpacing(20),
+                EnterAirtimeAmountSection(
+                  amountController: _airtimeAmountController,
+                ),
+                const VerticalSpacing(40),
+                ValueListenableBuilder(
+                  valueListenable: _isBuyAirtimeEnabled,
+                  builder: (context, r, c) {
+                    return MapsDataSendButton(
+                      //  isLoading: isLoading,
+                      isEnabled: r && !isLoading,
+                      onTap: () {
+                        userBalance < num.parse(_airtimeAmountController.text)
+                            ? context.showError(message: 'Insuffienct funds')
+                            : showPinBottomSheet();
+                      },
+                      title: 'Proceed',
+                    );
+                  },
+                )
+              ],
+            ),
+          )),
+        ),
       ),
     );
   }
@@ -175,6 +181,10 @@ class _AirtimeTopupScreenState extends ConsumerState<AirtimeTopupScreen> {
           },
           onSuccess: (message) {
             context.showSuccess(message: message);
+            ref.read(getNotificationNotifer.notifier).getNotification(
+                  onSuccess: (message) {},
+                );
+            _pinController.clear();
           },
         );
   }

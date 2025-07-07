@@ -38,6 +38,7 @@ import 'package:mapsdata/presentation/features/register/data/models/sign_up_resp
 import 'package:mapsdata/presentation/features/result_checker/data/model/buy_exam_request.dart';
 import 'package:mapsdata/presentation/features/result_checker/data/model/buy_exam_response.dart';
 import 'package:mapsdata/presentation/features/result_checker/data/model/get_all_exams_model.dart';
+import 'package:mapsdata/presentation/features/transactions/data/model/get_transactions_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'rest_client.g.dart';
@@ -97,6 +98,13 @@ abstract class RestClient {
 
   @POST('/fund-wallet/virtual-account')
   Future<VirtualAccountResponse> virtualAccount();
+
+  @GET('/transaction')
+  Future<TransactionResponse> getTransactions({
+    @Query('page') int? page,
+    @Query('entries') int? entries,
+    @Query('search') String? search,
+  });
 
   @POST('/airtime/topup')
   Future<BuyAirtimeResponse> buyAirtime(

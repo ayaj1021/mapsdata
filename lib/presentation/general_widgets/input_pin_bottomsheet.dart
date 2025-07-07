@@ -52,7 +52,12 @@ class InputPinBottomsheet extends StatelessWidget {
               child: MapsDataSendButton(
                 isLoading: false,
                 isEnabled: isEnabled,
-                onTap: onTap,
+                onTap: () {
+                  if (isEnabled) {
+                    Navigator.pop(context);
+                    onTap();
+                  }
+                },
                 title: 'Proceed',
               ),
             ),

@@ -3,11 +3,12 @@ import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/core/utils/strings.dart';
 import 'package:mapsdata/presentation/features/dashboard/history/presentation/view/history.dart';
-import 'package:mapsdata/presentation/features/dashboard/history/presentation/widgets/transaction_history_widget.dart';
+import 'package:mapsdata/presentation/features/transactions/data/model/get_transactions_response.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
 class TransactionHistorySection extends StatelessWidget {
-  const TransactionHistorySection({super.key});
+  const TransactionHistorySection({super.key, required this.transactionList});
+  final List<TransactionData> transactionList;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class TransactionHistorySection extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const History(),
+                    builder: (context) => const TransactionHistory(),
                   ),
                 );
               },
@@ -49,14 +50,20 @@ class TransactionHistorySection extends StatelessWidget {
             color: AppColors.white,
           ),
           child: Column(
-            children: List.generate(3, (index) {
-              return const SingleChildScrollView(
-                child: Column(
-                  children: [
-                    TransactionHistoryWidget(),
-                    VerticalSpacing(10),
-                  ],
+            children: List.generate(
+                transactionList.length < 3 ? transactionList.length : 3,
+                (index) {
+              final tx = transactionList[index];
+              return ListTile(
+                leading: Icon(
+                  tx.type == "Credit"
+                      ? Icons.arrow_downward
+                      : Icons.arrow_upward,
+                  color: tx.type == "Credit" ? Colors.green : Colors.red,
                 ),
+                title: Text(tx.description ?? 'No description'),
+                subtitle: Text(tx.date ?? ''),
+                trailing: Text("₦${tx.amount ?? '0'}"),
               );
             }),
           ),

@@ -134,68 +134,75 @@ class _BuyDataScreenState extends ConsumerState<BuyDataScreen> {
     final dataPlans = ref.watch(getAllDataPlansNotifierProvider
         .select((v) => v.data?.plans?.toList() ?? []));
 
+    final isDataPlansLoading = ref.watch(
+        getAllDataPlansNotifierProvider.select((v) => v.state.isLoading));
+
     final userData =
         ref.watch(getNotificationNotifer.select((v) => v.data?.user));
     final userBalance = userData?.wallet ?? 0;
 
     return Scaffold(
       body: PageLoader(
-        isLoading: isLoading,
-        child: SafeArea(
-            child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                const DataTopupHeaderSection(),
-                const VerticalSpacing(30),
-                DataNetworkSelection(
-                  selectedNetwork: _selectedNetwork,
-                  dataPlans: dataPlans,
-                  onNidSelected: _onNidSelected,
-                  selectedNid: _selectedNid.toString(),
-                  onNetworkSelected: (selectedCableProvider) =>
-                      _onDataProviderSelected(selectedCableProvider, dataPlans),
-                ),
-                const VerticalSpacing(20),
-                SelectPhoneNumberSection(
-                  phoneNumberController: _phoneNumberController,
-                ),
-                const VerticalSpacing(20),
-                DataTypeWidget(
-                  selectedNetwork: _selectedNetwork,
-                  selectedType: _selectedType,
-                  dataPlans: dataPlans,
-                  ontypeSelected: (selectedType) =>
-                      _onTypeSelected(selectedType, dataPlans),
-                ),
-                const VerticalSpacing(20),
-                DataPlanWidget(
-                  filteredPlans: filteredPlans,
-                  onPlanSelected: _onPlanSelected,
-                  selectedPlan: _selectedPlan,
-                  selectedNetwork: _selectedNetwork,
-                  selectedType: _selectedType,
-                  onDataIdSelected: _onDataIdSelected,
-                  selectedDataId: _selectedDataId,
-                  selectedPlanPrice: _selectedPlanPrice,
-                  onPlanPriceSelected: _onPlanPriceSelected,
-                ),
-                VerticalSpacing(60),
-                MapsDataSendButton(
-                  isLoading: isLoading,
-                  isEnabled: isEnabled(),
-                  onTap: () {
-                    userBalance < num.parse(_selectedPlanPrice ?? '')
-                        ? context.showError(message: 'Insuffienct funds')
-                        : showPinBottomSheet();
-                  },
-                  title: 'Buy Data',
-                )
-              ],
+        isLoading: isDataPlansLoading,
+        child: PageLoader(
+          isLoading: isLoading,
+          child: SafeArea(
+              child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  const DataTopupHeaderSection(),
+                  const VerticalSpacing(30),
+                  DataNetworkSelection(
+                    selectedNetwork: _selectedNetwork,
+                    dataPlans: dataPlans,
+                    onNidSelected: _onNidSelected,
+                    selectedNid: _selectedNid.toString(),
+                    onNetworkSelected: (selectedCableProvider) =>
+                        _onDataProviderSelected(
+                            selectedCableProvider, dataPlans),
+                  ),
+                  const VerticalSpacing(20),
+                  SelectPhoneNumberSection(
+                    phoneNumberController: _phoneNumberController,
+                  ),
+                  const VerticalSpacing(20),
+                  DataTypeWidget(
+                    selectedNetwork: _selectedNetwork,
+                    selectedType: _selectedType,
+                    dataPlans: dataPlans,
+                    ontypeSelected: (selectedType) =>
+                        _onTypeSelected(selectedType, dataPlans),
+                  ),
+                  const VerticalSpacing(20),
+                  DataPlanWidget(
+                    filteredPlans: filteredPlans,
+                    onPlanSelected: _onPlanSelected,
+                    selectedPlan: _selectedPlan,
+                    selectedNetwork: _selectedNetwork,
+                    selectedType: _selectedType,
+                    onDataIdSelected: _onDataIdSelected,
+                    selectedDataId: _selectedDataId,
+                    selectedPlanPrice: _selectedPlanPrice,
+                    onPlanPriceSelected: _onPlanPriceSelected,
+                  ),
+                  VerticalSpacing(60),
+                  MapsDataSendButton(
+                    //  isLoading: isLoading,
+                    isEnabled: isEnabled(),
+                    onTap: () {
+                      userBalance < num.parse(_selectedPlanPrice ?? '')
+                          ? context.showError(message: 'Insuffienct funds')
+                          : showPinBottomSheet();
+                    },
+                    title: 'Buy Data',
+                  )
+                ],
+              ),
             ),
-          ),
-        )),
+          )),
+        ),
       ),
     );
   }
@@ -221,13 +228,17 @@ class _BuyDataScreenState extends ConsumerState<BuyDataScreen> {
   void _buyData() {
     final data = BuyDataRequest(
         id: _selectedDataId.toString(),
-        pin: '1111',
+        pin: _pinController.text.trim(),
         number: _phoneNumberController.text.trim());
 
     ref.read(buyDataNotifierProvider.notifier).buyData(
           request: data,
           onSuccess: (message) {
             context.showSuccess(message: message);
+            ref.read(getNotificationNotifer.notifier).getNotification(
+                  onSuccess: (message) {},
+                );
+            _pinController.clear();
           },
           onError: (message) {
             context.showError(message: message);

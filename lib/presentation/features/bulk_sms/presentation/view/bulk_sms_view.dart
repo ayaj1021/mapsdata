@@ -135,7 +135,7 @@ class _BuyCableScreenState extends ConsumerState<BulkSms> {
                     valueListenable: _isEnabled,
                     builder: (context, r, c) {
                       return MapsDataSendButton(
-                        isLoading: isLoading,
+                        //   isLoading: isLoading,
                         isEnabled: r,
                         onTap: () {
                           userBalance < totalAmount
@@ -183,6 +183,7 @@ class _BuyCableScreenState extends ConsumerState<BulkSms> {
           request: data,
           onSuccess: (message) {
             context.showSuccess(message: message);
+            _pinController.clear();
           },
           onError: (message) {
             context.showError(message: message);

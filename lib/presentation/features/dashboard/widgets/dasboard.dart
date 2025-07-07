@@ -17,7 +17,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   List pages = [
     const Home(),
-    const History(),
+    const TransactionHistory(),
     const Support(),
     const Profile()
   ];

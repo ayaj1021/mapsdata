@@ -140,6 +140,8 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
         buyCableNotifierProvider.select((state) => state.state.isLoading));
     final dataPlans = ref.watch(getCablePlansNotifierProvider
         .select((v) => v.data?.plans?.toList() ?? []));
+    final isDataPlansLoading = ref
+        .watch(getCablePlansNotifierProvider.select((v) => v.state.isLoading));
 
     final dataPlanNetworks = ref.watch(getCablePlansNotifierProvider
         .select((v) => v.data?.plans?.toList() ?? []));
@@ -155,143 +157,147 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
 
     return Scaffold(
       body: PageLoader(
-        isLoading: isLoading,
-        child: SafeArea(
-            child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                const CustomAppHeaderSection(
-                  title: 'Buy Cable',
-                ),
-                const VerticalSpacing(30),
-                CableNetworkSelection(
-                  selectedNetwork: _selectedNetwork,
-                  dataPlans: dataPlanNetworks,
-                  onNidSelected: _onNidSelected,
-                  selectedNid: _selectedNid.toString(),
-                  onNetworkSelected: (selectedCableProvider) =>
-                      _onDataProviderSelected(
-                    selectedCableProvider,
-                    dataPlans,
+        isLoading: isDataPlansLoading,
+        child: PageLoader(
+          isLoading: isLoading,
+          child: SafeArea(
+              child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  const CustomAppHeaderSection(
+                    title: 'Buy Cable',
                   ),
-                ),
-                if (_selectedNetwork != null)
-                  Column(
-                    children: [
-                      const VerticalSpacing(20),
-                      CablePlanWidget(
-                        filteredPlans: filteredPlans,
-                        onPlanSelected: _onPlanSelected,
-                        selectedPlan: _selectedPlan,
-                        selectedNetwork: _selectedNetwork,
-                        selectedType: _selectedType,
-                        onDataIdSelected: _onDataIdSelected,
-                        selectedDataId: _selectedDataId,
-                        selectedPlanPrice: _selectedPlanPrice,
-                        onPlanPriceSelected: _onPlanPriceSelected,
-                      ),
-                      const VerticalSpacing(20),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 1),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          // color: AppColors.white,
+                  const VerticalSpacing(30),
+                  CableNetworkSelection(
+                    selectedNetwork: _selectedNetwork,
+                    dataPlans: dataPlanNetworks,
+                    onNidSelected: _onNidSelected,
+                    selectedNid: _selectedNid.toString(),
+                    onNetworkSelected: (selectedCableProvider) =>
+                        _onDataProviderSelected(
+                      selectedCableProvider,
+                      dataPlans,
+                    ),
+                  ),
+                  if (_selectedNetwork != null)
+                    Column(
+                      children: [
+                        const VerticalSpacing(20),
+                        CablePlanWidget(
+                          filteredPlans: filteredPlans,
+                          onPlanSelected: _onPlanSelected,
+                          selectedPlan: _selectedPlan,
+                          selectedNetwork: _selectedNetwork,
+                          selectedType: _selectedType,
+                          onDataIdSelected: _onDataIdSelected,
+                          selectedDataId: _selectedDataId,
+                          selectedPlanPrice: _selectedPlanPrice,
+                          onPlanPriceSelected: _onPlanPriceSelected,
                         ),
-                        child: DSFormfield(
-                          onChange: (value) {
-                            if (_selectedPlanPrice != null &&
-                                value.isNotEmpty) {
-                              setState(() {
-                                totalAmount =
-                                    (num.tryParse(_selectedPlanPrice!) ?? 0) *
-                                        (num.tryParse(value) ?? 1);
-                              });
-                            }
-
-                            final data = ValidateCableNumberRequest(
-                              cardNumber: _cardNumberController.text.trim(),
-                              id: _selectedNid.toString(),
-                            );
-                            if (value.isNotEmpty && value.length >= 10) {
-                              ref
-                                  .read(validateCableNumberNotifierProvider
-                                      .notifier)
-                                  .validateCableNumber(
-                                      request: data,
-                                      onError: (error) {
-                                        context.showError(message: error);
-                                      },
-                                      onSuccess: (message) {
-                                        context.showSuccess(message: message);
-                                      });
-                            }
-                          },
-                          label: 'IUC Number',
-                          controller: _cardNumberController,
-                          validateFunction: Validators.notEmpty(),
-                          hintText: 'Enter iuc number',
-                          keyboardType: TextInputType.number,
-                          maxLength: 11,
-                        ),
-                      ),
-                      if (isCardNumberLoading)
-                        Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                      if (cardNumber != null)
+                        const VerticalSpacing(20),
                         Container(
-                          width: double.infinity,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
+                              horizontal: 10, vertical: 1),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              width: 1.5,
-                              color: AppColors.primary808080
-                                  .withValues(alpha: 0.15),
-                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            // color: AppColors.white,
                           ),
-                          child: Text(cardNumber),
+                          child: DSFormfield(
+                            onChange: (value) {
+                              if (_selectedPlanPrice != null &&
+                                  value.isNotEmpty) {
+                                setState(() {
+                                  totalAmount =
+                                      (num.tryParse(_selectedPlanPrice!) ?? 0) *
+                                          (num.tryParse(value) ?? 1);
+                                });
+                              }
+
+                              final data = ValidateCableNumberRequest(
+                                cardNumber: _cardNumberController.text.trim(),
+                                id: _selectedNid.toString(),
+                              );
+                              if (value.isNotEmpty && value.length >= 10) {
+                                ref
+                                    .read(validateCableNumberNotifierProvider
+                                        .notifier)
+                                    .validateCableNumber(
+                                        request: data,
+                                        onError: (error) {
+                                          context.showError(message: error);
+                                        },
+                                        onSuccess: (message) {
+                                          context.showSuccess(message: message);
+                                        });
+                              }
+                            },
+                            label: 'IUC Number',
+                            controller: _cardNumberController,
+                            validateFunction: Validators.notEmpty(),
+                            hintText: 'Enter iuc number',
+                            keyboardType: TextInputType.number,
+                            maxLength: 11,
+                          ),
                         ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
+                        if (isCardNumberLoading)
+                          Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                        if (cardNumber != null)
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                width: 1.5,
+                                color: AppColors.primary808080
+                                    .withValues(alpha: 0.15),
+                              ),
+                            ),
+                            child: Text(cardNumber),
+                          ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: DSFormfield(
+                            label: 'Phone number',
+                            controller: _phoneNumberController,
+                            validateFunction: Validators.notEmpty(),
+                            hintText: 'Enter phone number',
+                            keyboardType: TextInputType.phone,
+                            maxLength: 11,
+                          ),
                         ),
-                        child: DSFormfield(
-                          label: 'Phone number',
-                          controller: _phoneNumberController,
-                          validateFunction: Validators.notEmpty(),
-                          hintText: 'Enter phone number',
-                          keyboardType: TextInputType.phone,
-                          maxLength: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                VerticalSpacing(60),
-                ValueListenableBuilder(
-                    valueListenable: _isEnabled,
-                    builder: (context, r, c) {
-                      return MapsDataSendButton(
-                        isLoading: isLoading,
-                        isEnabled: r,
-                        onTap: () {
-                          userBalance < totalAmount
-                              ? context.showError(message: 'Insuffienct funds')
-                              : showPinBottomSheet();
-                        },
-                        title: 'Proceed',
-                      );
-                    })
-              ],
+                      ],
+                    ),
+                  VerticalSpacing(60),
+                  ValueListenableBuilder(
+                      valueListenable: _isEnabled,
+                      builder: (context, r, c) {
+                        return MapsDataSendButton(
+                          //  isLoading: isLoading,
+                          isEnabled: r,
+                          onTap: () {
+                            userBalance < totalAmount
+                                ? context.showError(
+                                    message: 'Insuffienct funds')
+                                : showPinBottomSheet();
+                          },
+                          title: 'Proceed',
+                        );
+                      })
+                ],
+              ),
             ),
-          ),
-        )),
+          )),
+        ),
       ),
     );
   }

@@ -45,7 +45,7 @@ class NotificationResponse {
 }
 
 class NotificartionUser {
-  final int? wallet;
+  final num? wallet;
   final String? commission;
   final String? verification;
   final String? status;

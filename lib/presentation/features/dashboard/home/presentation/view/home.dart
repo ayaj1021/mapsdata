@@ -8,6 +8,7 @@ import 'package:mapsdata/presentation/features/dashboard/home/presentation/widge
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/widgets/wallet_balance_section.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_response.dart';
 import 'package:mapsdata/presentation/features/notification/notifier/get_notification_notifier.dart';
+import 'package:mapsdata/presentation/features/transactions/presentation/notifier/get_transactions_notifer.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -26,10 +27,9 @@ class _HomeState extends ConsumerState<Home> {
       ref.read(getNotificationNotifer.notifier).getNotification(
         onSuccess: (message) {
           bvnNotificationAlert(context, message: message);
-          // You can handle the success message here, e.g., show a snackbar
         },
       );
-      // bvnNotificationAlert(context);
+      ref.read(getTransactionsNotifer.notifier).getTransactions();
     });
     super.initState();
   }
@@ -45,16 +45,25 @@ class _HomeState extends ConsumerState<Home> {
     }
   }
 
+  Future<void> _onRefresh() {
+    return ref.read(getNotificationNotifer.notifier).getNotification(
+          onSuccess: (message) {},
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     final userData =
         ref.watch(getNotificationNotifer.select((v) => v.data?.user));
+    final transactionList =
+        ref.watch(getTransactionsNotifer.select((v) => v.data?.data ?? []));
     return Scaffold(
       body: SafeArea(
-          child: Padding(
-        padding: EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
+          child: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: ListView(
             children: [
               HomeHeaderSection(
                 userName: user?.firstname ?? '',
@@ -66,7 +75,9 @@ class _HomeState extends ConsumerState<Home> {
               VerticalSpacing(20),
               ServicesSection(),
               VerticalSpacing(15),
-              TransactionHistorySection()
+              TransactionHistorySection(
+                transactionList: transactionList,
+              )
             ],
           ),
         ),
