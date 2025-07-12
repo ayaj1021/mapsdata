@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
-import 'package:mapsdata/presentation/features/dashboard/history/presentation/view/history.dart';
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/view/home.dart';
 import 'package:mapsdata/presentation/features/dashboard/profile/presentation/view/profile.dart';
 import 'package:mapsdata/presentation/features/dashboard/support/presentation/view/support.dart';
+import 'package:mapsdata/presentation/features/dashboard/transaction_history/presentation/view/transaction_history.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

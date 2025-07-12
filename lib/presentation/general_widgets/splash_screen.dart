@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/core/extensions/build_context_extension.dart';
-import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
+import 'package:mapsdata/presentation/features/dashboard/widgets/dashboard.dart';
 import 'package:mapsdata/presentation/features/onboarding/presentation/view/onboarding_view.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {

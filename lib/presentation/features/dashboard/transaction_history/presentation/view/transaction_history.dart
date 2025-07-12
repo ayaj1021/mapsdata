@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mapsdata/presentation/features/dashboard/history/presentation/widgets/transaction_header.dart';
-import 'package:mapsdata/presentation/features/dashboard/history/presentation/widgets/transaction_history_widget.dart';
+import 'package:mapsdata/presentation/features/dashboard/transaction_history/presentation/widgets/transaction_header.dart';
+import 'package:mapsdata/presentation/features/dashboard/transaction_history/presentation/widgets/transaction_history_widget.dart';
 import 'package:mapsdata/presentation/features/transactions/presentation/notifier/get_transactions_notifer.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 

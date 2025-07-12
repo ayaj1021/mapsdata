@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/core/utils/strings.dart';
-import 'package:mapsdata/presentation/features/dashboard/history/presentation/view/history.dart';
+import 'package:mapsdata/presentation/features/dashboard/transaction_history/presentation/view/transaction_history.dart';
 import 'package:mapsdata/presentation/features/transactions/data/model/get_transactions_response.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
 

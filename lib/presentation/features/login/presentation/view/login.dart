@@ -11,7 +11,7 @@ import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/core/utils/enums.dart';
 import 'package:mapsdata/core/utils/strings.dart';
 import 'package:mapsdata/core/utils/validators.dart';
-import 'package:mapsdata/presentation/features/dashboard/widgets/dasboard.dart';
+import 'package:mapsdata/presentation/features/dashboard/widgets/dashboard.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_request.dart';
 import 'package:mapsdata/presentation/features/login/presentation/fingerprint_facialauth.dart';
 import 'package:mapsdata/presentation/features/login/presentation/notifier/login_notifier.dart';

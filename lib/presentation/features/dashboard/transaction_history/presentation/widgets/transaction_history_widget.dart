@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/utils/enums.dart';
+import 'package:mapsdata/presentation/features/dashboard/transaction_history/presentation/view/transaction_details_view.dart';
 import 'package:mapsdata/presentation/features/transactions/presentation/notifier/get_transactions_notifer.dart';
 
 class TransactionHistoryList extends ConsumerWidget {
@@ -30,6 +31,14 @@ class TransactionHistoryList extends ConsumerWidget {
         if (index < dataList.length) {
           final tx = dataList[index];
           return ListTile(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TransactionDetailsView(
+                            tx: tx,
+                          )));
+            },
             leading: Icon(
               tx.type == "Credit" ? Icons.arrow_downward : Icons.arrow_upward,
               color: tx.type == "Credit" ? Colors.green : Colors.red,
