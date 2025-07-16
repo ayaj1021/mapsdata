@@ -18,7 +18,9 @@ class GetExamServicesNotifier
     return BaseState<ExamResponse>.initial();
   }
 
-  Future<void> getResultServices() async {
+  Future<void> getResultServices({
+    required void Function(String message, bool hasPin) onSuccess,
+  }) async {
     state = state.copyWith(state: LoadState.loading);
 
     try {
@@ -27,6 +29,7 @@ class GetExamServicesNotifier
       if (value.status == 'failed') throw value.message?.toException ?? '';
 
       state = state.copyWith(state: LoadState.idle, data: (value.data));
+      onSuccess('', value.data?.pin ?? false);
     } catch (e) {
       state = state.copyWith(state: LoadState.idle);
     }

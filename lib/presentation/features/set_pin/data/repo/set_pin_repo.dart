@@ -3,15 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapsdata/core/config/base_response/base_response.dart';
 import 'package:mapsdata/core/config/exception/app_exception.dart';
 import 'package:mapsdata/data/remote_data_source/rest_client.dart';
-import 'package:mapsdata/presentation/features/register/data/models/sign_up_request.dart';
-import 'package:mapsdata/presentation/features/register/data/models/sign_up_response.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_request.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_response.dart';
 
-class RegisterRepository {
-  RegisterRepository(this._restClient);
+class SetPinRepository {
+  SetPinRepository(this._restClient);
   final RestClient _restClient;
-  Future<BaseResponse<SignUpResponse>> signUp(SignUpRequest request) async {
+  Future<BaseResponse<SetPinResponse>> setPin(SetPinRequest request) async {
     try {
-      final response = await _restClient.signUp(request);
+      final response = await _restClient.setPin(request);
       return BaseResponse(
           status: response.status.toString(),
           data: response,
@@ -22,8 +22,8 @@ class RegisterRepository {
   }
 }
 
-final registerRepositoryProvider = Provider<RegisterRepository>(
-  (ref) => RegisterRepository(
+final setPinRepositoryProvider = Provider<SetPinRepository>(
+  (ref) => SetPinRepository(
     ref.read(restClientProvider),
   ),
 );

@@ -18,7 +18,8 @@ class GetAirtimePlansNotifier
     return BaseState<GetAirtimePlansResponse>.initial();
   }
 
-  Future<void> getAirtimePlans() async {
+  Future<void> getAirtimePlans(
+      {required void Function(String message, bool hasPin) onSuccess}) async {
     state = state.copyWith(state: LoadState.loading);
 
     try {
@@ -27,6 +28,7 @@ class GetAirtimePlansNotifier
       if (value.status == 'failed') throw value.message?.toException ?? '';
 
       state = state.copyWith(state: LoadState.idle, data: (value.data));
+      onSuccess('', value.data?.pin ?? false);
     } catch (e) {
       state = state.copyWith(state: LoadState.idle);
     }

@@ -38,6 +38,8 @@ import 'package:mapsdata/presentation/features/register/data/models/sign_up_resp
 import 'package:mapsdata/presentation/features/result_checker/data/model/buy_exam_request.dart';
 import 'package:mapsdata/presentation/features/result_checker/data/model/buy_exam_response.dart';
 import 'package:mapsdata/presentation/features/result_checker/data/model/get_all_exams_model.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_request.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_response.dart';
 import 'package:mapsdata/presentation/features/transactions/data/model/get_transactions_response.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -50,6 +52,11 @@ abstract class RestClient {
   @POST('/user/register')
   Future<SignUpResponse> signUp(
     @Body() SignUpRequest signUpRequest,
+  );
+
+  @POST('/user/set-pin')
+  Future<SetPinResponse> setPin(
+    @Body() SetPinRequest signUpRequest,
   );
 
   @POST('/user/login')

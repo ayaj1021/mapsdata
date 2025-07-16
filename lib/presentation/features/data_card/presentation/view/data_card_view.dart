@@ -14,6 +14,9 @@ import 'package:mapsdata/presentation/features/data_card/presentation/notifier/g
 import 'package:mapsdata/presentation/features/data_card/presentation/widgets/data_card_network_dropdown.dart';
 import 'package:mapsdata/presentation/features/data_card/presentation/widgets/data_card_plan_section.dart';
 import 'package:mapsdata/presentation/features/notification/notifier/get_notification_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_request.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/notifier/set_pin_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/view/set_pin_message.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_form_field.dart';
 import 'package:mapsdata/presentation/general_widgets/ds_bottom_sheet.dart';
@@ -32,15 +35,46 @@ class _BuyDataScreenState extends ConsumerState<DataCardScreen> {
   final ValueNotifier<bool> _isEnabled = ValueNotifier(false);
   late TextEditingController _quantityController;
   late TextEditingController _nameOnCardController;
+  final _setPinController = TextEditingController();
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(getDataCardsNotifierProvider.notifier).getAllDataPlans();
+      final isLoading =
+          ref.watch(setPinNotifer.select((v) => v.state.isLoading));
+      await ref.read(getDataCardsNotifierProvider.notifier).getAllDataPlans(
+        onSuccess: (message, hasPin) {
+          if (mounted) {
+            hasPin
+                ? null
+                : setPinNotificationAlert(context, _setPinController,
+                    onTap: () {
+                    if (_setPinController.text.isEmpty) {
+                      context.showError(message: 'Enter pin');
+                    } else {
+                      setPin();
+                    }
+                  }, isLoading: isLoading);
+          }
+        },
+      );
     });
     _quantityController = TextEditingController()..addListener(_listener);
     _nameOnCardController = TextEditingController()..addListener(_listener);
+  }
+
+  void setPin() {
+    final data = SetPinRequest(pin: _setPinController.text.trim());
+    ref.read(setPinNotifer.notifier).setPin(
+        data: data,
+        onSuccess: (message) {
+          context.showSuccess(message: message);
+          Navigator.pop(context);
+        },
+        onError: (error) {
+          context.showError(message: error);
+        });
   }
 
   List<DataCardsPlan> filteredPlans = [];

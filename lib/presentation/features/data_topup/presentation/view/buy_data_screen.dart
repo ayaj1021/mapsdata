@@ -13,6 +13,9 @@ import 'package:mapsdata/presentation/features/data_topup/presentation/widgets/d
 import 'package:mapsdata/presentation/features/data_topup/presentation/widgets/data_topup_header_section.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/widgets/data_type_widget.dart';
 import 'package:mapsdata/presentation/features/notification/notifier/get_notification_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_request.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/notifier/set_pin_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/view/set_pin_message.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/ds_bottom_sheet.dart';
 import 'package:mapsdata/presentation/general_widgets/input_pin_bottomsheet.dart';
@@ -27,15 +30,45 @@ class BuyDataScreen extends ConsumerStatefulWidget {
 }
 
 class _BuyDataScreenState extends ConsumerState<BuyDataScreen> {
+  final _setPinController = TextEditingController();
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref
-          .read(getAllDataPlansNotifierProvider.notifier)
-          .getAllDataPlans();
+      final isLoading =
+          ref.watch(setPinNotifer.select((v) => v.state.isLoading));
+
+      await ref.read(getAllDataPlansNotifierProvider.notifier).getAllDataPlans(
+        onSuccess: (message, hasPin) {
+          if (mounted) {
+            hasPin
+                ? null
+                : setPinNotificationAlert(context, _setPinController,
+                    onTap: () {
+                    if (_setPinController.text.isEmpty) {
+                      context.showError(message: 'Enter pin');
+                    } else {
+                      setPin();
+                    }
+                  }, isLoading: isLoading);
+          }
+        },
+      );
     });
+  }
+
+  void setPin() {
+    final data = SetPinRequest(pin: _setPinController.text.trim());
+    ref.read(setPinNotifer.notifier).setPin(
+        data: data,
+        onSuccess: (message) {
+          context.showSuccess(message: message);
+          Navigator.pop(context);
+        },
+        onError: (error) {
+          context.showError(message: error);
+        });
   }
 
   List<Plan> filteredPlans = [];

@@ -11,8 +11,10 @@ import 'package:mapsdata/presentation/features/airtime_topup/presentation/widget
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/airtime_topup_header_section.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/enter_airtime_amount_section.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/select_phone_number_section.dart';
-import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/set_pin_message.dart';
 import 'package:mapsdata/presentation/features/notification/notifier/get_notification_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_request.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/notifier/set_pin_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/view/set_pin_message.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/ds_bottom_sheet.dart';
 import 'package:mapsdata/presentation/general_widgets/input_pin_bottomsheet.dart';
@@ -30,21 +32,51 @@ class _AirtimeTopupScreenState extends ConsumerState<AirtimeTopupScreen> {
   final ValueNotifier<bool> _isBuyAirtimeEnabled = ValueNotifier(false);
   late TextEditingController _phoneNumberController;
   late TextEditingController _airtimeAmountController;
+  final _setPinController = TextEditingController();
   String? _selectedNetwork;
   String? _selectedNid;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref
-          .read(getAirtimePlansNotifierProvider.notifier)
-          .getAirtimePlans();
-      if (mounted) {
-        setPinNotificationAlert(context);
-      }
+      final isLoading =
+          ref.watch(setPinNotifer.select((v) => v.state.isLoading));
+      await ref.read(getAirtimePlansNotifierProvider.notifier).getAirtimePlans(
+        onSuccess: (message, hasPin) {
+          if (mounted) {
+            hasPin
+                ? null
+                : setPinNotificationAlert(
+                    context,
+                    _setPinController,
+                    onTap: () {
+                      if (_setPinController.text.isEmpty) {
+                        context.showError(message: 'Enter pin');
+                      } else {
+                        setPin();
+                      }
+                    },
+                    isLoading: isLoading,
+                  );
+          }
+        },
+      );
     });
     _phoneNumberController = TextEditingController()..addListener(_listener);
     _airtimeAmountController = TextEditingController()..addListener(_listener);
     super.initState();
+  }
+
+  void setPin() {
+    final data = SetPinRequest(pin: _setPinController.text.trim());
+    ref.read(setPinNotifer.notifier).setPin(
+        data: data,
+        onSuccess: (message) {
+          context.showSuccess(message: message);
+          Navigator.pop(context);
+        },
+        onError: (error) {
+          context.showError(message: error);
+        });
   }
 
   List<AirtimeItem> filteredPlans = [];

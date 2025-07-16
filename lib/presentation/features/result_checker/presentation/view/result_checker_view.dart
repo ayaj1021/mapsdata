@@ -14,6 +14,9 @@ import 'package:mapsdata/presentation/features/result_checker/data/model/get_all
 import 'package:mapsdata/presentation/features/result_checker/presentation/notifier/buy_exam_notifier.dart';
 import 'package:mapsdata/presentation/features/result_checker/presentation/notifier/get_exam_services_notifier.dart';
 import 'package:mapsdata/presentation/features/result_checker/presentation/widgets/result_network_dropdown.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_request.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/notifier/set_pin_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/view/set_pin_message.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_form_field.dart';
 import 'package:mapsdata/presentation/general_widgets/ds_bottom_sheet.dart';
@@ -32,6 +35,7 @@ class ResultCheckerScreen extends ConsumerStatefulWidget {
 class _ResultCheckerScreenState extends ConsumerState<ResultCheckerScreen> {
   final ValueNotifier<bool> _isBuyAirtimeEnabled = ValueNotifier(false);
   late TextEditingController _quantityController;
+  final _setPinController = TextEditingController();
 
   String? _selectedNetwork;
   String? _selectedNid;
@@ -39,14 +43,47 @@ class _ResultCheckerScreenState extends ConsumerState<ResultCheckerScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final isLoading =
+          ref.watch(setPinNotifer.select((v) => v.state.isLoading));
       await ref
           .read(getResultServicesNotifierProvider.notifier)
-          .getResultServices();
-      // setPinNotificationAlert(context);
+          .getResultServices(
+        onSuccess: (message, hasPin) {
+          if (mounted) {
+            hasPin
+                ? null
+                : setPinNotificationAlert(
+                    context,
+                    _setPinController,
+                    onTap: () {
+                      if (_setPinController.text.isEmpty) {
+                        context.showError(message: 'Enter pin');
+                      } else {
+                        setPin();
+                      }
+                    },
+                    isLoading: isLoading,
+                  );
+          }
+        },
+      );
     });
     _quantityController = TextEditingController()..addListener(_listener);
 
     super.initState();
+  }
+
+  void setPin() {
+    final data = SetPinRequest(pin: _setPinController.text.trim());
+    ref.read(setPinNotifer.notifier).setPin(
+        data: data,
+        onSuccess: (message) {
+          context.showSuccess(message: message);
+          Navigator.pop(context);
+        },
+        onError: (error) {
+          context.showError(message: error);
+        });
   }
 
   List<AirtimeItem> filteredPlans = [];

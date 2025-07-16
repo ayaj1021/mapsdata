@@ -15,6 +15,9 @@ import 'package:mapsdata/presentation/features/cables/presentation/notifier/vali
 import 'package:mapsdata/presentation/features/cables/presentation/widgets/cable_newwork_drop_down.dart';
 import 'package:mapsdata/presentation/features/cables/presentation/widgets/cable_plans_widget.dart';
 import 'package:mapsdata/presentation/features/notification/notifier/get_notification_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/data/model/set_pin_request.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/notifier/set_pin_notifier.dart';
+import 'package:mapsdata/presentation/features/set_pin/presentation/view/set_pin_message.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_form_field.dart';
 import 'package:mapsdata/presentation/general_widgets/ds_bottom_sheet.dart';
@@ -33,15 +36,50 @@ class _BuyCableScreenState extends ConsumerState<BuyCableScreen> {
   final ValueNotifier<bool> _isEnabled = ValueNotifier(false);
   late TextEditingController _cardNumberController;
   late TextEditingController _phoneNumberController;
+  final _setPinController = TextEditingController();
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(getCablePlansNotifierProvider.notifier).getCablePlans();
+      final isLoading =
+          ref.watch(setPinNotifer.select((v) => v.state.isLoading));
+      await ref.read(getCablePlansNotifierProvider.notifier).getCablePlans(
+        onSuccess: (message, hasPin) {
+          if (mounted) {
+            hasPin
+                ? null
+                : setPinNotificationAlert(
+                    context,
+                    _setPinController,
+                    onTap: () {
+                      if (_setPinController.text.isEmpty) {
+                        context.showError(message: 'Enter pin');
+                      } else {
+                        setPin();
+                      }
+                    },
+                    isLoading: isLoading,
+                  );
+          }
+        },
+      );
     });
     _cardNumberController = TextEditingController()..addListener(_listener);
     _phoneNumberController = TextEditingController()..addListener(_listener);
+  }
+
+  void setPin() {
+    final data = SetPinRequest(pin: _setPinController.text.trim());
+    ref.read(setPinNotifer.notifier).setPin(
+        data: data,
+        onSuccess: (message) {
+          context.showSuccess(message: message);
+          Navigator.pop(context);
+        },
+        onError: (error) {
+          context.showError(message: error);
+        });
   }
 
   List<Plan> filteredPlans = [];

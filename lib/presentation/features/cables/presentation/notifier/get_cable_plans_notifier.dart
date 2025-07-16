@@ -18,7 +18,9 @@ class GetCablePlansNotifier
     return BaseState<CablePlansResponse>.initial();
   }
 
-  Future<void> getCablePlans() async {
+  Future<void> getCablePlans({
+    required void Function(String message, bool hasPin) onSuccess,
+  }) async {
     state = state.copyWith(state: LoadState.loading);
 
     try {
@@ -27,6 +29,7 @@ class GetCablePlansNotifier
       if (value.status == 'failed') throw value.message?.toException ?? '';
 
       state = state.copyWith(state: LoadState.idle, data: (value.data));
+      onSuccess('', value.data?.pin ?? false);
     } catch (e) {
       state = state.copyWith(state: LoadState.idle);
     }

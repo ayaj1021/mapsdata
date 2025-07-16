@@ -18,7 +18,9 @@ class GetAllDataPlansNotifier
     return BaseState<GetDataPlansResponse>.initial();
   }
 
-  Future<void> getAllDataPlans() async {
+  Future<void> getAllDataPlans({
+    required void Function(String message, bool hasPin) onSuccess,
+  }) async {
     state = state.copyWith(state: LoadState.loading);
 
     try {
@@ -27,6 +29,7 @@ class GetAllDataPlansNotifier
       if (value.status == 'failed') throw value.message?.toException ?? '';
 
       state = state.copyWith(state: LoadState.idle, data: (value.data));
+      onSuccess('', value.data?.pin ?? false);
     } catch (e) {
       state = state.copyWith(state: LoadState.idle);
     }

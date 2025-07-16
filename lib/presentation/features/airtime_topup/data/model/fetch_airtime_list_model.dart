@@ -6,7 +6,7 @@ class GetAirtimePlansResponse {
   List<PrefixItem>? prefix;
   List<NetworkItem>? networks;
   List<dynamic>? beneficiaries;
-  int? balance;
+  num? balance;
   bool? pin;
 
   GetAirtimePlansResponse({
