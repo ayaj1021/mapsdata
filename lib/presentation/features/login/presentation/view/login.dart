@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mapsdata/core/config/security/biometrics.dart';
+import 'package:mapsdata/core/database/local_storage_impl.dart';
 import 'package:mapsdata/core/extensions/build_context_extension.dart';
 import 'package:mapsdata/core/extensions/overlay_extension.dart';
 import 'package:mapsdata/core/extensions/space_extension.dart';
@@ -13,7 +15,6 @@ import 'package:mapsdata/core/utils/strings.dart';
 import 'package:mapsdata/core/utils/validators.dart';
 import 'package:mapsdata/presentation/features/dashboard/widgets/dashboard.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_request.dart';
-import 'package:mapsdata/presentation/features/login/presentation/fingerprint_facialauth.dart';
 import 'package:mapsdata/presentation/features/login/presentation/notifier/login_notifier.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/forgot_password.dart';
 import 'package:mapsdata/presentation/features/register/presentation/view/register.dart';
@@ -33,12 +34,17 @@ class _LoginState extends ConsumerState<Login> {
   final ValueNotifier<bool> _isLoginEnabled = ValueNotifier(false);
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
+  final _secureStorage = SecureStorage();
+  bool biometricsAvailable = false;
+  bool showBiometrics = false;
+  String debugInfo = '';
 
   @override
   void initState() {
     _usernameController = TextEditingController()..addListener(_listener);
     _passwordController = TextEditingController()..addListener(_listener);
     super.initState();
+    _initializeBiometrics();
   }
 
   void _listener() {
@@ -52,6 +58,70 @@ class _LoginState extends ConsumerState<Login> {
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _initializeBiometrics() async {
+    try {
+      final canUseBiometrics = await Biometrics.canDoBiometrics();
+      final savedEmail = await _secureStorage.getUserEmail();
+      final savedPassword = await _secureStorage.getUserPassword();
+
+      setState(() {
+        biometricsAvailable = canUseBiometrics;
+        // Show biometrics if available and user has previously saved credentials
+        showBiometrics = canUseBiometrics
+
+            // &&
+            //     savedEmail != null &&
+            //     savedEmail.isNotEmpty &&
+            //     savedPassword != null &&
+            //     savedPassword.isNotEmpty
+            ;
+
+        debugInfo = '''
+Biometrics Available: $canUseBiometrics
+Saved Email: ${savedEmail?.isNotEmpty == true ? "✅" : "❌"}
+Saved Password: ${savedPassword?.isNotEmpty == true ? "✅" : "❌"}
+Show Biometrics: $showBiometrics
+        ''';
+      });
+
+      // If biometrics are available and credentials are saved, pre-fill the form
+      if (showBiometrics && savedEmail != null && savedPassword != null) {
+        _usernameController.text = savedEmail;
+        // Don't pre-fill password for security, but store it for biometric auth
+      }
+    } catch (e) {
+      setState(() {
+        biometricsAvailable = false;
+        showBiometrics = false;
+      });
+    }
+  }
+
+  Future<void> _authenticateWithBiometrics() async {
+    try {
+      final biometrics = ref.read(biometricsProvider);
+      final authenticated =
+          await biometrics.performAuth('Please verify your identity to login');
+
+      if (authenticated) {
+        // Get saved credentials
+        final savedEmail = await _secureStorage.getUserEmail();
+        final savedPassword = await _secureStorage.getUserPassword();
+
+        if (savedEmail != null && savedPassword != null) {
+          // Auto-fill and login
+          _usernameController.text = savedEmail;
+          _passwordController.text = savedPassword;
+          _login();
+        } else {
+          context.showError(message: 'No saved credentials found');
+        }
+      }
+    } catch (e) {
+      context.showError(message: 'Biometric authentication failed');
+    }
   }
 
   @override
@@ -96,7 +166,6 @@ class _LoginState extends ConsumerState<Login> {
                     fit: BoxFit.scaleDown,
                   ),
                 ),
-
                 GestureDetector(
                   onTap: () {
                     context.pushNamed<void>(ForgotPassword.routeName);
@@ -111,7 +180,6 @@ class _LoginState extends ConsumerState<Login> {
                     ),
                   ),
                 ),
-
                 70.hSpace,
                 ValueListenableBuilder(
                   valueListenable: _isLoginEnabled,
@@ -161,46 +229,17 @@ class _LoginState extends ConsumerState<Login> {
                     ),
                   ],
                 ),
-
-                Center(
-                  child: FingerprintFacialauth(
-                    onAuthenticated: (p0) {
-                      _passwordController.text = p0;
-                      _login();
-                    },
+                if (biometricsAvailable)
+                  Center(
+                    child: GestureDetector(
+                        onTap: () {
+                          print('object');
+                          _authenticateWithBiometrics();
+                        },
+                        child:
+                            SvgPicture.asset('assets/icons/finger-print.svg')),
                   ),
-                ),
                 130.hSpace,
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     GestureDetector(
-                //       onTap: () => Navigator.pushReplacementNamed(
-                //         context,
-                //         Register.routeName,
-                //       ),
-                //       child: Text(
-                //         Strings.signUp,
-                //         style: context.textTheme.s14w400.copyWith(
-                //           color: AppColors.secondaryColor,
-                //         ),
-                //       ),
-                //     ),
-                //     Padding(
-                //       padding: const EdgeInsets.symmetric(horizontal: 24),
-                //       child: Container(
-                //         color: Colors.black,
-                //         height: 20,
-                //         width: 2,
-                //       ),
-                //     ),
-                //     Text(
-                //       Strings.privacy,
-                //       style: context.textTheme.s14w400,
-                //       selectionColor: AppColors.primary7C7794,
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -209,11 +248,14 @@ class _LoginState extends ConsumerState<Login> {
     );
   }
 
-  void _login() {
+  void _login() async {
     final data = LoginRequest(
-      username: _usernameController.text.toLowerCase().trim(),
+      username: _usernameController.text.trim(),
       password: _passwordController.text.trim(),
     );
+
+    await _secureStorage.saveUserEmail(_usernameController.text.trim());
+    await _secureStorage.saveUserPassword(_passwordController.text.trim());
     ref.read(loginNotifer.notifier).login(
           data: data,
           onError: (error) {

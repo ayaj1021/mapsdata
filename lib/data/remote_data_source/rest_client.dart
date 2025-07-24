@@ -25,8 +25,11 @@ import 'package:mapsdata/presentation/features/electricity/data/model/buy_electr
 import 'package:mapsdata/presentation/features/electricity/data/model/get_discos_response.dart';
 import 'package:mapsdata/presentation/features/electricity/data/model/validate_card_number_request.dart';
 import 'package:mapsdata/presentation/features/electricity/data/model/validate_card_number_response.dart';
+import 'package:mapsdata/presentation/features/fund_account/data/model/atm_funding_response.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/link_bvn_nin_request.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/link_nin_bvn_response.dart';
+import 'package:mapsdata/presentation/features/fund_account/data/model/manual_funding_request.dart';
+import 'package:mapsdata/presentation/features/fund_account/data/model/manual_funding_response.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/virtual_account_response.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_request.dart';
 import 'package:mapsdata/presentation/features/login/data/models/login_response.dart';
@@ -68,6 +71,10 @@ abstract class RestClient {
   Future<BvnLinkResponse> linkNinBvn(
     @Body() LinkBvnNinRequest loginRequest,
   );
+  @POST('/fund-wallet/dynamic-virtual-account')
+  Future<ManualFundingResponse> manualFunding(
+    @Body() ManualFundingRequest request,
+  );
 
   @POST('/data/plans')
   Future<GetDataPlansResponse> getDataPlansDetails();
@@ -105,6 +112,8 @@ abstract class RestClient {
 
   @POST('/fund-wallet/virtual-account')
   Future<VirtualAccountResponse> virtualAccount();
+  @POST('/fund-wallet/atm-card')
+  Future<AtmFundingResponse> atmFunding();
 
   @GET('/transaction')
   Future<TransactionResponse> getTransactions({

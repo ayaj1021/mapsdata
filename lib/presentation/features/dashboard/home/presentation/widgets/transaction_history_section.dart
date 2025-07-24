@@ -40,34 +40,35 @@ class TransactionHistorySection extends StatelessWidget {
           ],
         ),
         const VerticalSpacing(5),
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 20,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: AppColors.white,
-          ),
-          child: Column(
-            children: List.generate(
-                transactionList.length < 3 ? transactionList.length : 3,
-                (index) {
-              final tx = transactionList[index];
-              return ListTile(
-                leading: Icon(
-                  tx.type == "Credit"
-                      ? Icons.arrow_downward
-                      : Icons.arrow_upward,
-                  color: tx.type == "Credit" ? Colors.green : Colors.red,
-                ),
-                title: Text(tx.description ?? 'No description'),
-                subtitle: Text(tx.date ?? ''),
-                trailing: Text("₦${tx.amount ?? '0'}"),
-              );
-            }),
-          ),
-        )
+        if (transactionList.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 20,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: AppColors.white,
+            ),
+            child: Column(
+              children: List.generate(
+                  transactionList.length < 3 ? transactionList.length : 3,
+                  (index) {
+                final tx = transactionList[index];
+                return ListTile(
+                  leading: Icon(
+                    tx.type == "Credit"
+                        ? Icons.arrow_downward
+                        : Icons.arrow_upward,
+                    color: tx.type == "Credit" ? Colors.green : Colors.red,
+                  ),
+                  title: Text(tx.description ?? 'No description'),
+                  subtitle: Text(tx.date ?? ''),
+                  trailing: Text("₦${tx.amount ?? '0'}"),
+                );
+              }),
+            ),
+          )
       ],
     );
   }

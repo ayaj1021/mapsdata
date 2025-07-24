@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mapsdata/core/database/local_storage_impl.dart';
+import 'package:mapsdata/core/extensions/overlay_extension.dart';
 import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/widgets/bvn_message.dart';
@@ -71,6 +73,8 @@ class _HomeState extends ConsumerState<Home> {
         ref.watch(getNotificationNotifer.select((v) => v.data));
     final transactionList =
         ref.watch(getTransactionsNotifer.select((v) => v.data?.data ?? []));
+    final referLink =
+        "https://app.mapsdata.com.ng/register?ref=${user?.username ?? ''}";
     return Scaffold(
       body: SafeArea(
           child: RefreshIndicator(
@@ -141,6 +145,53 @@ class _HomeState extends ConsumerState<Home> {
                         ),
                       ),
                     )
+                  ],
+                ),
+              ),
+              VerticalSpacing(20),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(12)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          'assets/icons/refer_earn.png',
+                          height: 46,
+                        ),
+                        HorizontalSpacing(5),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Refer & Earn',
+                              style: context.textTheme.s14w500
+                                  .copyWith(color: AppColors.primary005304),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.5,
+                              child: Text(
+                                referLink,
+                                style: context.textTheme.s10w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          Clipboard.setData(ClipboardData(text: referLink));
+                          context.showToast(message: 'Copied successfully');
+                        },
+                        child: Icon(Icons.copy))
                   ],
                 ),
               ),

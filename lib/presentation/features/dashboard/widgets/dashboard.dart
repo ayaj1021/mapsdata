@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/presentation/features/dashboard/home/presentation/view/home.dart';
 import 'package:mapsdata/presentation/features/dashboard/profile/presentation/view/profile.dart';
-import 'package:mapsdata/presentation/features/dashboard/support/presentation/view/support.dart';
 import 'package:mapsdata/presentation/features/dashboard/transaction_history/presentation/view/transaction_history.dart';
 
 class Dashboard extends StatefulWidget {
@@ -18,7 +17,7 @@ class _DashboardState extends State<Dashboard> {
   List pages = [
     const Home(),
     const TransactionHistory(),
-    const Support(),
+    // const Support(),
     const Profile()
   ];
 
@@ -56,12 +55,12 @@ class _DashboardState extends State<Dashboard> {
                 child: const Icon(Icons.history),
               ),
               label: 'History'),
-          BottomNavigationBarItem(
-              icon: SizedBox(
-                  height: 24.h,
-                  width: 24.w,
-                  child: const Icon(Icons.support_agent)),
-              label: 'Support'),
+          // BottomNavigationBarItem(
+          //     icon: SizedBox(
+          //         height: 24.h,
+          //         width: 24.w,
+          //         child: const Icon(Icons.support_agent)),
+          //     label: 'Support'),
           BottomNavigationBarItem(
               icon: SizedBox(
                 height: 24.h,

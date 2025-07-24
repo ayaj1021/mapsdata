@@ -1,63 +1,47 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+class SignUpRequest {
+  final String firstname;
+  final String lastname;
+  final String email;
+  final String number;
+  final String username;
+  final String password;
+  final String referral;
+  final String confirmPassword;
 
-part 'sign_up_request.g.dart';
-
-@JsonSerializable()
-class SignUpRequest extends Equatable {
   const SignUpRequest({
     required this.firstname,
     required this.lastname,
-    required this.username,
     required this.email,
     required this.number,
+    required this.username,
     required this.password,
+    required this.referral,
     required this.confirmPassword,
   });
 
-  factory SignUpRequest.fromJson(Map<String, dynamic> json) =>
-      _$SignUpRequestFromJson(json);
-
-  final String? firstname;
-  final String? lastname;
-  final String? username;
-  final String? email;
-  final String? number;
-
-  final String? password;
-  @JsonKey(name: 'confirm_password')
-  final String? confirmPassword;
-
-  Map<String, dynamic> toJson() => _$SignUpRequestToJson(this);
-
-  SignUpRequest copyWith({
-    String? firstname,
-    String? lastname,
-    String? username,
-    String? email,
-    String? number,
-    String? password,
-    String? confirmPassword,
-  }) {
+  factory SignUpRequest.fromJson(Map<String, dynamic> json) {
     return SignUpRequest(
-      firstname: firstname ?? this.firstname,
-      lastname: lastname ?? this.lastname,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      number: number ?? this.number,
-      password: password ?? this.password,
-      confirmPassword: confirmPassword ?? this.confirmPassword,
+      firstname: json['firstname'],
+      lastname: json['lastname'],
+      email: json['email'],
+      number: json['number'],
+      username: json['username'],
+      password: json['password'],
+      referral: json['referral'],
+      confirmPassword: json['confirm_password'],
     );
   }
 
-  @override
-  List<Object?> get props => [
-        firstname,
-        lastname,
-        username,
-        email,
-        number,
-        password,
-        confirmPassword,
-      ];
+  Map<String, dynamic> toJson() {
+    return {
+      'firstname': firstname,
+      'lastname': lastname,
+      'email': email,
+      'number': number,
+      'username': username,
+      'password': password,
+      'referral': referral,
+      'confirm_password': confirmPassword,
+    };
+  }
 }

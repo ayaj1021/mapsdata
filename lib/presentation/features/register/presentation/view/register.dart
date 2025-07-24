@@ -35,6 +35,7 @@ class _RegisterState extends ConsumerState<Register> {
   late TextEditingController _lastNamecontroller;
   late TextEditingController _usernamecontroller;
   late TextEditingController _phoneNumbercontroller;
+  late TextEditingController _referralcontroller;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -47,6 +48,7 @@ class _RegisterState extends ConsumerState<Register> {
     _lastNamecontroller.dispose();
     _usernamecontroller.dispose();
     _phoneNumbercontroller.dispose();
+    _referralcontroller.dispose();
 
     super.dispose();
   }
@@ -60,6 +62,7 @@ class _RegisterState extends ConsumerState<Register> {
     _firstNamecontroller = TextEditingController()..addListener(_validateInput);
     _lastNamecontroller = TextEditingController()..addListener(_validateInput);
     _usernamecontroller = TextEditingController()..addListener(_validateInput);
+    _referralcontroller = TextEditingController()..addListener(_validateInput);
     _phoneNumbercontroller = TextEditingController()
       ..addListener(_validateInput);
     _confirmPasswordController = TextEditingController()
@@ -92,6 +95,7 @@ class _RegisterState extends ConsumerState<Register> {
             number: _phoneNumbercontroller.text.trim(),
             password: _passwordController.text.trim(),
             confirmPassword: _confirmPasswordController.text.trim(),
+            referral: _referralcontroller.text.trim(),
           ),
           onError: (error) {
             context.showError(message: error);
@@ -161,6 +165,13 @@ class _RegisterState extends ConsumerState<Register> {
                     prefixIcon: const Icon(
                       Icons.phone,
                     ),
+                  ),
+
+                  DSFormfield(
+                    //   validateFunction: Validators.name(),
+                    controller: _referralcontroller,
+                    hintText: 'Referral code',
+                    prefixIcon: const Icon(Icons.person),
                   ),
 
                   DSPasswordField(

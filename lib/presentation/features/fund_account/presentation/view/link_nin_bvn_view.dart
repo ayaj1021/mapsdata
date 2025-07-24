@@ -6,7 +6,7 @@ import 'package:mapsdata/core/extensions/text_theme_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/core/utils/enums.dart';
 import 'package:mapsdata/presentation/features/fund_account/data/model/link_bvn_nin_request.dart';
-import 'package:mapsdata/presentation/features/fund_account/presentation/notifier/link_non_bvn_notifier.dart';
+import 'package:mapsdata/presentation/features/fund_account/presentation/notifier/link_nin_bvn_notifier.dart';
 import 'package:mapsdata/presentation/general_widgets/app_button.dart';
 import 'package:mapsdata/presentation/general_widgets/digit_send_form_field.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mapsdata/core/extensions/build_context_extension.dart';
 import 'package:mapsdata/core/theme/app_colors.dart';
 import 'package:mapsdata/core/utils/enums.dart';
 import 'package:mapsdata/presentation/features/fund_account/presentation/notifier/virtual_account_notifier.dart';
+import 'package:mapsdata/presentation/features/fund_account/presentation/view/atm_funding_view.dart';
 import 'package:mapsdata/presentation/features/fund_account/presentation/view/fund_failed_dialog.dart';
 import 'package:mapsdata/presentation/features/fund_account/presentation/widgets/fund_account_options_widget.dart';
 import 'package:mapsdata/presentation/general_widgets/spacing.dart';
@@ -53,12 +55,14 @@ class FundAccountOptions extends ConsumerWidget {
             ),
             VerticalSpacing(20),
             FundAccountOptionsWidget(
-              onTap: () {},
               image: 'assets/logo/wallet.png',
               title: 'Manual Funding',
             ),
             VerticalSpacing(20),
             FundAccountOptionsWidget(
+              onTap: () {
+                context.pushNamed(AtmFundingView.routeName);
+              },
               image: 'assets/logo/atm_card.png',
               title: 'ATM Funding',
             ),

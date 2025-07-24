@@ -71,7 +71,7 @@ class ServicesSection extends StatelessWidget {
               QuickActionTabs(
                   onTap: () => context.pushNamed(ResultCheckerScreen.routeName),
                   image: 'assets/svg/education_new.svg',
-                  title: 'Result Checker'),
+                  title: 'Pin Checker'),
               QuickActionTabs(
                   onTap: () => context.pushNamed(BuyCableScreen.routeName),
                   image: 'assets/svg/cable_new.svg',

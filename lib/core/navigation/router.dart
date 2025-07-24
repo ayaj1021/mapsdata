@@ -6,7 +6,9 @@ import 'package:mapsdata/presentation/features/dashboard/widgets/dashboard.dart'
 import 'package:mapsdata/presentation/features/data_card/presentation/view/data_card_view.dart';
 import 'package:mapsdata/presentation/features/data_topup/presentation/view/buy_data_screen.dart';
 import 'package:mapsdata/presentation/features/electricity/presentation/view/electricity_view.dart';
+import 'package:mapsdata/presentation/features/fund_account/presentation/view/atm_funding_view.dart';
 import 'package:mapsdata/presentation/features/fund_account/presentation/view/link_nin_bvn_view.dart';
+import 'package:mapsdata/presentation/features/fund_account/presentation/view/manual_funding_view.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/forgot_password.dart';
 import 'package:mapsdata/presentation/features/login/presentation/view/login.dart';
 import 'package:mapsdata/presentation/features/maps_venture/view/maps_venture_view.dart';
@@ -36,6 +38,8 @@ class AppRouter {
     BuyCableScreen.routeName: (context) => const BuyCableScreen(),
     BuyElectricityScreen.routeName: (context) => const BuyElectricityScreen(),
     BulkSms.routeName: (context) => const BulkSms(),
+    AtmFundingView.routeName: (context) => const AtmFundingView(),
+    ManualFundingView.routeName: (context) => const ManualFundingView(),
   };
   static Map<String, Widget Function(BuildContext)> get routes => _routes;
 }

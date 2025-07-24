@@ -7,7 +7,7 @@ class QuickActionTabs extends StatelessWidget {
   const QuickActionTabs({
     required this.image,
     required this.title,
-     this.color,
+    this.color,
     super.key,
     this.onTap,
   });
