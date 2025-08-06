@@ -22,7 +22,8 @@ class BuyAirtimeNotifier
   Future<void> buyAirtime({
     required BuyAirtimeRequest request,
     required void Function(String message) onError,
-    required void Function(String message) onSuccess,
+    required void Function(String message, BuyAirtimeResponse response)
+        onSuccess,
   }) async {
     state = state.copyWith(state: LoadState.loading);
 
@@ -32,7 +33,7 @@ class BuyAirtimeNotifier
       if (value.status == 'failed') throw value.message?.toException ?? '';
 
       state = state.copyWith(state: LoadState.idle, data: (value.data));
-      onSuccess(value.message ?? '');
+      onSuccess(value.message ?? '', value.data ?? BuyAirtimeResponse());
     } catch (e) {
       state = state.copyWith(state: LoadState.idle);
       onError(e.toString());

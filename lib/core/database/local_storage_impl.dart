@@ -92,6 +92,15 @@ class SecureStorage {
     return value;
   }
 
+  Future<void> saveHasLoggedIn(bool hasLoggedIn) async {
+    await _storage.write(key: 'hasLoggedIn', value: hasLoggedIn.toString());
+  }
+
+  Future<bool> getHasLoggedIn() async {
+    String? value = await _storage.read(key: 'hasLoggedIn');
+    return value?.toLowerCase() == 'true';
+  }
+
   Future<void> saveUserAccountName(String userEmail) async {
     await _storage.write(key: 'user_account_name', value: userEmail);
   }
@@ -116,7 +125,7 @@ class SecureStorage {
   }
 
   Future<void> clearStorage() async {
-    await _storage.deleteAll();
+    await _storage.delete(key: 'token');
   }
 
   // Future<void> saveUserDetails(

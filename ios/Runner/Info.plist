@@ -6,6 +6,8 @@
 	<string>This app needs access to save transaction receipts</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>This is to ensure the user can use finger print</string>
 	<key>CFBundleDisplayName</key>
 	<string>Mapsdata</string>
 	<key>CFBundleExecutable</key>

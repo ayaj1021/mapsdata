@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,11 +40,13 @@ class _LoginState extends ConsumerState<Login> {
   bool biometricsAvailable = false;
   bool showBiometrics = false;
   String debugInfo = '';
+  bool hasLoggedIn = true;
 
   @override
   void initState() {
     _usernameController = TextEditingController()..addListener(_listener);
     _passwordController = TextEditingController()..addListener(_listener);
+    getUserLoggedIn();
     super.initState();
     _initializeBiometrics();
   }
@@ -50,6 +54,10 @@ class _LoginState extends ConsumerState<Login> {
   void _listener() {
     _isLoginEnabled.value = _usernameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty;
+  }
+
+  getUserLoggedIn() async {
+    hasLoggedIn = await _secureStorage.getHasLoggedIn();
   }
 
   @override
@@ -90,6 +98,7 @@ Show Biometrics: $showBiometrics
       if (showBiometrics && savedEmail != null && savedPassword != null) {
         _usernameController.text = savedEmail;
         // Don't pre-fill password for security, but store it for biometric auth
+        _authenticateWithBiometrics();
       }
     } catch (e) {
       setState(() {
@@ -109,18 +118,23 @@ Show Biometrics: $showBiometrics
         // Get saved credentials
         final savedEmail = await _secureStorage.getUserEmail();
         final savedPassword = await _secureStorage.getUserPassword();
+        log('email $savedEmail, password $savedPassword');
 
         if (savedEmail != null && savedPassword != null) {
           // Auto-fill and login
           _usernameController.text = savedEmail;
           _passwordController.text = savedPassword;
-          _login();
+          _fingerPrintlogin();
         } else {
-          context.showError(message: 'No saved credentials found');
+          if (mounted) {
+            context.showError(message: 'No saved credentials found');
+          }
         }
       }
     } catch (e) {
-      context.showError(message: 'Biometric authentication failed');
+      if (mounted) {
+        context.showError(message: 'Biometric authentication failed');
+      }
     }
   }
 
@@ -229,11 +243,10 @@ Show Biometrics: $showBiometrics
                     ),
                   ],
                 ),
-                if (biometricsAvailable)
+                if (hasLoggedIn && biometricsAvailable)
                   Center(
                     child: GestureDetector(
                         onTap: () {
-                          print('object');
                           _authenticateWithBiometrics();
                         },
                         child:
@@ -256,6 +269,29 @@ Show Biometrics: $showBiometrics
 
     await _secureStorage.saveUserEmail(_usernameController.text.trim());
     await _secureStorage.saveUserPassword(_passwordController.text.trim());
+    ref.read(loginNotifer.notifier).login(
+          data: data,
+          onError: (error) {
+            context.showError(message: error);
+          },
+          onSuccess: (message) async {
+            context.showSuccess(message: ' Authentication successful');
+            _isLoginEnabled.value = false;
+            context.replaceAll(Dashboard.routeName);
+            await _secureStorage.saveHasLoggedIn(true);
+          },
+        );
+  }
+
+  void _fingerPrintlogin() async {
+    final userName = await _secureStorage.getUserEmail();
+    final password = await _secureStorage.getUserPassword();
+
+    final data = LoginRequest(
+      username: userName ?? '',
+      password: password ?? '',
+    );
+
     ref.read(loginNotifer.notifier).login(
           data: data,
           onError: (error) {

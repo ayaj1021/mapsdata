@@ -7,6 +7,7 @@ import 'package:mapsdata/presentation/features/airtime_topup/data/model/buy_airt
 import 'package:mapsdata/presentation/features/airtime_topup/data/model/fetch_airtime_list_model.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/notifier/buy_airtime_notifier.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/notifier/get_airtime_plans_notifier.dart';
+import 'package:mapsdata/presentation/features/airtime_topup/presentation/view/airtime_success_view.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/airtime_network_dropdown.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/airtime_topup_header_section.dart';
 import 'package:mapsdata/presentation/features/airtime_topup/presentation/widgets/enter_airtime_amount_section.dart';
@@ -211,11 +212,19 @@ class _AirtimeTopupScreenState extends ConsumerState<AirtimeTopupScreen> {
           onError: (error) {
             context.showError(message: error);
           },
-          onSuccess: (message) {
+          onSuccess: (message, response) {
             context.showSuccess(message: message);
             ref.read(getNotificationNotifer.notifier).getNotification(
                   onSuccess: (message) {},
                 );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => AirtimeSuccessView(
+                  data: response,
+                ),
+              ),
+            );
             _pinController.clear();
           },
         );

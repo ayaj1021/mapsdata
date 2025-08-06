@@ -25,6 +25,7 @@ class SelectPhoneNumberSection extends StatelessWidget {
             hintText: 'Enter phone number',
             keyboardType: TextInputType.number,
             maxLength: 11,
+
             // prefixIcon: const Icon(Icons.phone),
           ),
         ),
